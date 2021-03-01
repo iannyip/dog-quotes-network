@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+  <body>
+    <%- include ('partial/navbar') %>
+    <div class='container mt-4'>
+      <h1>Your profile</h1>
+      <form action="/dogs/you/edit?_method=PUT" method="POST" class="mt-4">
+        <div class="form-group">
+          <label for="name" class=""><b>Name</b></label>
+          <input type="text" class="form-control" id='name' name='name' value="<%= name %>">
+        </div>
+        <div class="form-group">
+          <label for="dob" class=""><b>DOB</b></label>
+          <input type="text" class="form-control" id='dob' name='dob' value="<%= dob %>">
+        </div>
+        <div class="form-group">
+          <label for="about" class=""><b>About</b></label> 
+          <input type="text" class="form-control" id='about' name='about' value="<%= about %>">
+        </div>
+        <div class="form-group">
+          <label for="status" class=""><b>Status</b></label>
+          <input type="text" class="form-control" id='status' name='status' value="<%= status %>">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <%- include ('partial/requiredjs') %>
+
+  </body>
+</html>

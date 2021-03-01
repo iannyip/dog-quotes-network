@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+  <body>
+    <%- include ('partial/navbar') %>
+    <div class="container mt-4">
+      <h1>All dogs</h1>
+      <hr class="my-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th> 
+            <th scope="col">Name</th> 
+            <th scope="col">DOB</th> 
+            <th scope="col">About</th> 
+            <th scope="col">Status</th>
+            <th scope="col">Page</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% allDogs.forEach(dog => { %>
+            <tr>
+              <th scope="row"><%= dog.id %></th>
+              <td><%= dog.name %></td>
+              <td><%= dog.dob %></td>
+              <td><%= dog.about %></td>
+              <td><%= dog.status %></td>
+              <td><a href="/dogs/profile/<%= dog.id %>"><i class="bi bi-link-45deg"></i></a></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <%- include ('partial/requiredjs') %>
+
+  </body>
+</html>

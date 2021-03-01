@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+  <body>
+    <%- include ('partial/navbar') %>
+    <div class="container mt-4">
+      <h1><%= name %></h1>
+      <form action="" class="mt-4">
+        <div class="form-group">
+          <label for="" class=""><b>DOB</b></label>
+          <input type="text" class="form-control-plaintext" value="<%= dob %>" readonly>
+        </div>
+        <div class="form-group">
+          <label for="" class=""><b>About</b></label> 
+          <input type="text" class="form-control-plaintext" value="<%= about %>" readonly>
+        </div>
+        <div class="form-group">
+          <label for="" class=""><b>Status</b></label>
+          <input type="text" class="form-control-plaintext" value="<%= status %>" readonly>
+        </div>
+      </form>
+    </div>
+
+    <%- include ('partial/requiredjs') %>
+
+  </body>
+</html>
