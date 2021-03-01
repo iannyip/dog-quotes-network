@@ -6,28 +6,46 @@
   <body>
     <%- include ('partial/navbar') %>
     <div class='container mt-4'>
-      <h1>Your profile</h1>
-      <form action="" class="mt-4">
-        <div class="form-group">
-          <label for="" class=""><b>Name</b></label>
-          <input type="text" class="form-control-plaintext" name="name" value="<%= name %>" readonly>
+      <div class='row'>
+        <h1>Your profile</h1>
+      </div>
+      <div class='row'>
+        <div class='col-md-6'>
+          <form action="" class="mt-4">
+            <div class="form-group">
+              <label for="" class=""><b>Name</b></label>
+              <input type="text" class="form-control-plaintext" name="name" value="<%= info.name %>" readonly>
+            </div>
+            <div class="form-group">
+              <label for="" class=""><b>DOB</b></label>
+              <input type="text" class="form-control-plaintext" name="dob" value="<%= info.dob %>" readonly>
+            </div>
+            <div class="form-group">
+              <label for="" class=""><b>About</b></label> 
+              <input type="text" class="form-control-plaintext" name="about" value="<%= info.about %>" readonly>
+            </div>
+            <div class="form-group">
+              <label for="" class=""><b>Status</b></label>
+              <input type="text" class="form-control-plaintext" name="status" value="<%= info.status %>" readonly>
+            </div>
+          </form>
+          <form action="/dogs/you/edit" method='GET'>
+            <button type='Submit' class="btn btn-primary">Edit Profile</button>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="" class=""><b>DOB</b></label>
-          <input type="text" class="form-control-plaintext" name="dob" value="<%= dob %>" readonly>
+        <div class='col-md-6'>
+          <h3>Your Quotes</h3>
+          <div class='row'>
+            <% quotes.forEach(quote => { %> 
+              <div class='col-12 border '>
+                <p><%= quote.quote %></p>
+                <a href="/quote/<%= quote.id %>/edit"><i class="bi bi-pencil"></i></a>
+              </div>
+            <% }); %>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="" class=""><b>About</b></label> 
-          <input type="text" class="form-control-plaintext" name="about" value="<%= about %>" readonly>
-        </div>
-        <div class="form-group">
-          <label for="" class=""><b>Status</b></label>
-          <input type="text" class="form-control-plaintext" name="status" value="<%= status %>" readonly>
-        </div>
-      </form>
-      <form action="/dogs/you/edit" method='GET'>
-        <button type='Submit' class="btn btn-primary">Edit Profile</button>
-      </form>
+      </div>
+      
     </div>
 
     <%- include ('partial/requiredjs') %>

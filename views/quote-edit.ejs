@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+  <body>
+    <%- include ('partial/navbar') %>
+    <div class='container mt-4'>
+      <h1>Edit quote</h1>
+      <form action="/quote/<%= id %>/edit?_method=PUT" method="POST">
+        <label for="quote">Make it even more inspiring</label>
+        <textarea name="quote" id="quote" class="form-control" rows="5"><%= quote %></textarea>
+        <input type="hidden" name="quoter_id" value=<%= quoter_id %>>
+        <button type="submit" class="btn btn-primary">Confirm changes</button>
+      </form>
+      <form action="/quote/<%= id %>/delete?_method=DELETE" method="POST">
+        <button class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+
+    <%- include ('partial/requiredjs') %>
+
+  </body>
+</html>

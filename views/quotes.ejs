@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+  <body>
+    <%- include ('partial/navbar') %>
+    <div class='container mt-4'>
+      <h1>All quotes</h1>
+      <a href="/quote/new" class="btn btn-primary">New quote</a>
+      <table class='table'>
+        <thead>
+          <tr>
+            <th scope='col'>#</th>
+            <th scope='col'>Date Created</th>
+            <th scope='col'>Quoter_id</th>
+            <th scope='col'>Quote</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% allQuotes.forEach(quote => { %>
+          <tr>
+            <th scope='row'><%= quote.id %></th>
+            <td><%= quote.created_at %></td>
+            <td><%= quote.quoter_id %></td>
+            <td><%= quote.quote %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+    </div>
+
+    <%- include ('partial/requiredjs') %>
+
+  </body>
+</html>

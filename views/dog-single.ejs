@@ -6,21 +6,41 @@
   <body>
     <%- include ('partial/navbar') %>
     <div class="container mt-4">
-      <h1><%= name %></h1>
-      <form action="" class="mt-4">
-        <div class="form-group">
-          <label for="" class=""><b>DOB</b></label>
-          <input type="text" class="form-control-plaintext" value="<%= dob %>" readonly>
+      <div class='row'>
+        <h1><%= info.name %></h1>
+      </div>
+      <div class='row'>
+        <div class='col-md-6'>
+          <form action="" class="mt-4">
+            <div class="form-group">
+              <label for="" class=""><b>Name</b></label>
+              <input type="text" class="form-control-plaintext" name="name" value="<%= info.name %>" readonly>
+            </div>
+            <div class="form-group">
+              <label for="" class=""><b>DOB</b></label>
+              <input type="text" class="form-control-plaintext" name="dob" value="<%= info.dob %>" readonly>
+            </div>
+            <div class="form-group">
+              <label for="" class=""><b>About</b></label> 
+              <input type="text" class="form-control-plaintext" name="about" value="<%= info.about %>" readonly>
+            </div>
+            <div class="form-group">
+              <label for="" class=""><b>Status</b></label>
+              <input type="text" class="form-control-plaintext" name="status" value="<%= info.status %>" readonly>
+            </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="" class=""><b>About</b></label> 
-          <input type="text" class="form-control-plaintext" value="<%= about %>" readonly>
+        <div class='col-md-6'>
+          <h3>Your Quotes</h3>
+          <div class='row'>
+            <% quotes.forEach(quote => { %> 
+              <div class='col-12'>
+                <p><%= quote.quote %></p>
+              </div>
+            <% }); %>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="" class=""><b>Status</b></label>
-          <input type="text" class="form-control-plaintext" value="<%= status %>" readonly>
-        </div>
-      </form>
+      </div>
     </div>
 
     <%- include ('partial/requiredjs') %>
