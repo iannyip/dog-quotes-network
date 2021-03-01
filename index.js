@@ -78,7 +78,6 @@ app.delete('/quote/:id/delete', (request, response) => {
 
 app.get('/dogs', (request, response) => {
   pool.query("SELECT * FROM dogs", (error, result) => {
-    response.cookie('userId', 1);
     const allDogs = result.rows;
     response.render('dogs', {allDogs});
   });
@@ -86,6 +85,8 @@ app.get('/dogs', (request, response) => {
 
 app.get('/dogs/profile/:id', (request, response) => {
   const {id} = request.params;
+  const {userId} = request.cookies;
+  console.log("user id from cookie: ", userId);
   const userData = {};
   pool
     .query(`SELECT * FROM dogs WHERE id=${id}`)
@@ -95,6 +96,22 @@ app.get('/dogs/profile/:id', (request, response) => {
     })
     .then((result) => {
       userData.quotes = result.rows;
+      return pool.query(`SELECT COUNT(*) FROM follows WHERE followed_id=${id}`)
+    })
+    .then((result) => {
+      if (result.rows.length === 0){
+        userData.followers = 0;
+      } else {
+        userData.followers = result.rows[0].count;
+      }
+      return pool.query(`SELECT * FROM follows WHERE (followed_id=${id} AND follower_id=${userId})`)
+    })
+    .then((result) => {
+      if (result.rows.length === 0){
+        userData.followStatus = false;
+      } else {
+        userData.followStatus = true;
+      }
       console.log(userData);
       response.render('dog-single', userData);
     })
@@ -142,7 +159,89 @@ app.put('/dogs/you/edit', (request, response) => {
     .catch((error) => console.log("error: ", error))
 })
 
+app.get('/help', (request, response) => {
+  response.render('help');
+})
 
+app.get('/login', (request, response) => {
+  response.render('login');
+})
+
+app.post('/login', (request, response) => {
+  const loginDetails = request.body;
+  console.log(loginDetails);
+  pool
+    .query(`SELECT * FROM dogs WHERE name='${loginDetails.name}'`)
+    .then((result) => {
+      // CONTINUE LOGIN VERIFICATION
+      if (result.rows.length === 0){
+        response.redirect('/login');
+        return;
+      } else {
+        const user = result.rows[0];
+        if (user.password === loginDetails.password) {
+          response.cookie('userId', user.id);
+          response.redirect('/dogs');
+        } else {
+          response.redirect('/login');
+          return;
+        }
+      }
+    })
+    .catch((error) => console.log(error));
+})
+
+app.get('/signup/1', (request, response) => {
+  response.render('signup1');
+})
+
+app.post('/signup/1', (request, response) => {
+  const newUserDataPartial = request.body;
+  console.log(newUserDataPartial);
+  response.render('signup2', newUserDataPartial);
+})
+
+app.post('/signup/2', (request, response) => {
+  const newUserData = request.body;
+  const inputNewUser = [newUserData.name, newUserData.password, newUserData.dob, newUserData.about]
+  pool
+    .query(`INSERT INTO dogs (name, password, dob, about, status) VALUES ($1, $2, $3, $4, 1)`, inputNewUser)
+    .then((result) => {
+      const queryUserArr = [newUserData.name, newUserData.password]
+      return pool.query(`SELECT * FROM dogs WHERE (name=$1 AND password=$2)`, queryUserArr)
+    })
+    .then((result) => {
+      const newUserId = result.rows[0].id;
+      response.cookie('userId', newUserId);
+      response.redirect('/dogs')
+    })
+    .catch((error) => console.log(error));
+})
+
+app.delete('/logout', (request, response) => {
+  response.clearCookie('userId');
+  response.redirect('/login');
+})
+
+app.post('/follow', (request, response) => {
+  const newRelationArr = [request.cookies.userId, request.body.followed];
+  pool
+    .query(`INSERT INTO follows (follower_id, followed_id) VALUES ($1, $2)`, newRelationArr)
+    .then((result) => {
+      response.redirect(`/dogs/profile/${newRelationArr[1]}`);
+    })
+    .catch((error) => console.log(error));
+})
+
+app.delete('/unfollow', (request, response) => {
+  const cutTiesArr = [request.cookies.userId, request.body.followed];
+  pool
+    .query(`DELETE FROM follows WHERE (follower_id=$1 AND followed_id=$2)`, cutTiesArr)
+    .then((result) => {
+      response.redirect(`/dogs/profile/${cutTiesArr[1]}`);
+    })
+    .catch((error) => console.log(error));
+})
 
 // Start server
 console.log("Starting server...");
