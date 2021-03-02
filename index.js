@@ -243,6 +243,44 @@ app.delete('/unfollow', (request, response) => {
     .catch((error) => console.log(error));
 })
 
+app.get('/quote/:id/tip', (request, response) => {
+  const quoteId = request.params.id;
+  const {userId} = request.cookies;
+  const quoteInfo = {};
+  // to do: add link to each quote
+  pool
+    .query(`SELECT * FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id WHERE quotes.id = ${quoteId}`)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        quoteInfo.validity = false;
+        return;
+      } else {
+        quoteInfo.validity = true;
+        quoteInfo.info = result.rows[0];
+        quoteInfo.info.payer = userId;
+        return pool.query(`SELECT * FROM transactions WHERE quote_id = ${quoteId}`)
+      }
+    })
+    .then((result) => {
+      quoteInfo.transactions = result.rows;
+      console.log(quoteInfo);
+      response.render('quote-single', quoteInfo);
+    })
+    .catch((error) => console.log(error.stack));
+})
+
+app.post('/quote/:id/tip', (request, response) => {
+  const newTrxn = request.body;
+  console.log(newTrxn);
+  const inputData = [newTrxn.payer_id, newTrxn.payee_id, newTrxn.quote_id, newTrxn.amount];
+  pool
+    .query(`INSERT INTO transactions (payer_id, payee_id, quote_id, amount) VALUES ($1, $2, $3, $4)`, inputData)
+    .then((result) => {
+      response.redirect(`/quote/${request.params.id}/tip`);
+    })
+    .catch((error) => console.log(error.stack));
+})
+
 // Start server
 console.log("Starting server...");
 app.listen(PORT);

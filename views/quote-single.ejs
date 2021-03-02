@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+  <body>
+    <%- include ('partial/navbar') %>
+    <div class='container mt-4'>
+      <div class='row'>
+        <!-- The quote and tip form -->
+        <div class="col-md-6">
+          <div class='row'>
+            <div class='col-12 lead'>
+              <h1><%= info.quote %></h1>
+              <p>By <%= info.name %></p>
+              <p>Total tips: <%= transactions.length %></p>
+            </div>
+          </div>
+          <div class='row my-4'>
+            <form action="/quote/<%= info.id %>/tip" method="POST">
+              <div class='form-group row'>
+                <label for="amount" class='col-sm-3 col-form-label'>Tip pls</label>
+                <div class='col-sm-9'>
+                  <input type="number" id='amount' name='amount' class='form-control col-sm-9'>
+                  <input type="hidden" id='payee_id' name='payee_id' value= <%= info.quoter_id %>>
+                  <input type="hidden" id='payer_id' name='payer_id' value= <%= info.payer %>>
+                  <input type="hidden" id='quote_id' name='quote_id' value= <%= info.quoter_id %>>
+                </div>
+              </div>
+              <div class='form-group row justify-content-end my-4'>
+                <div class='col-9'>
+                  <button type='submit' class='btn btn-primary'>Tip!</button>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+        </div>
+        <!-- History of transactions to this quote -->
+        <div class="col-md-6">
+          <h3>Transactions</h3>
+          <div class='row'>
+            <% transactions.forEach(transaction => { %>
+              <div class='col-12'>
+                <p><%= transaction.payer_id %> tipped $<%= transaction.amount %></p>
+              </div>
+            <% }); %>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <%- include ('partial/requiredjs') %>
+
+  </body>
+</html>

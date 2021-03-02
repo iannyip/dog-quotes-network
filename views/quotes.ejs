@@ -15,6 +15,7 @@
             <th scope='col'>Date Created</th>
             <th scope='col'>Quoter_id</th>
             <th scope='col'>Quote</th>
+            <th scope="col">Page</th>
           </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@
             <td><%= quote.created_at %></td>
             <td><%= quote.quoter_id %></td>
             <td><%= quote.quote %></td>
+            <td><a href="/quote/<%= quote.id %>/tip"><i class="bi bi-link-45deg"></i></a></td>
           </tr>
           <% }); %>
         </tbody>
