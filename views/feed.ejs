@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+  <body>
+    <%- include ('partial/navbar') %>
+    <div class='container mt-4'>
+      <div class='row justify-content-between'>
+        <!-- quotes -->
+        <div class='col-md-6 row vh-100 overflow-auto'>
+          <% quotes.forEach(quote => { %>
+            <a href="/quote/<%= quote.id %>/tip" style="text-decoration: none; color:#212529">
+              <div class='col-12 border'>
+                <p class='lead'><%= quote.quote %></p>
+                <div class='row'>
+                  <div class='col-6'>
+                    <b>by <a style='text-decoration: none' href="/dogs/profile/<%= quote.quoter_id %>"><%= quote.name %></a></b>
+                  </div>
+                  <div class='col-6 text-center'>
+                    <p><i class="bi bi-hand-thumbs-up-fill"></i> <%= quote.count %> tips | <i class="bi bi-cash"></i> $<%= quote.amount %></p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            
+          <% }); %>
+        </div>
+        <!-- users -->
+        <div class='col-md-5 vh-100 overflow-auto'>
+          <% dogs.forEach(dog => { %>
+            <div class='row border py-1'>
+              <div class="col-3" >
+                <div style="width:70px; height:70px; border-radius:50%; overflow:hidden" class='justify-content-center'>
+                  <img src="/<%= dog.profilepic%>" alt="" style="height:100%; width:auto; margin:0 auto">
+                </div>
+              </div>
+              <div class='col-8'>
+                <b><a style='text-decoration: none' href="/dogs/profile/<%= dog.id %>"><%= dog.name %></a></b>
+                <p><%= dog.about %></p>
+                <p><%= dog.followers %> followers | <%= dog.quotes %> quotes</p>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+
+    <%- include ('partial/requiredjs') %>
+
+  </body>
+</html>

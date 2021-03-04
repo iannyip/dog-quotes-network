@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include ('partial/header') %>
+  </head>
+
+  <body class="bg-gray-900">
+    <%- include ('partial/navbar') %>
+    <nav class="bg-purple-900 h-20 flex justify-center">
+      <h1 class="text-black text-5xl">Donation App</h1>
+    </nav>
+
+    <div class="container">
+      <div class='row justify-content-center'>
+        <form id='stripe-form'  action="/charge" method="POST" class="col-5">
+          <input
+            class="form-control my-2"
+            type="text"
+            name="name"
+            placeholder="Name"
+          />
+          <input
+            type="email"
+            class="form-control my-2"
+            name="email"
+            placeholder="Email"
+          />
+          <input
+            class="form-control my-2"
+            type="text"
+            name="amount"
+            placeholder="Amount"
+          />
+
+          <div
+            id="card-element"
+            class="form-control my-2"
+          ></div>
+          <div id="card-errors" role="alert"></div>
+          <button class="btn btn-primary">Submit Payment</button>
+        </form>
+      </div>
+    </div>
+  </body>
+
+  <!-- Javascript -->
+  <%- include ('partial/requiredjs') %>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="card.js"></script>
+</html>

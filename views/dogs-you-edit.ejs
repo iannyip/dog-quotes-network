@@ -7,7 +7,7 @@
     <%- include ('partial/navbar') %>
     <div class='container mt-4'>
       <h1>Your profile</h1>
-      <form action="/dogs/you/edit?_method=PUT" method="POST" class="mt-4">
+      <form action="/dogs/you/edit?_method=PUT" method="POST" enctype="multipart/form-data" class="mt-4">
         <div class="form-group">
           <label for="name" class=""><b>Name</b></label>
           <input type="text" class="form-control" id='name' name='name' value="<%= name %>">
@@ -23,6 +23,10 @@
         <div class="form-group">
           <label for="status" class=""><b>Status</b></label>
           <input type="text" class="form-control" id='status' name='status' value="<%= status %>">
+        </div>
+        <div class="form-group">
+          <label for="profilepic" class=""><b>Pofile Picture</b></label>
+          <input type="photo" class="form-control" id='profilepic' name='profilepic'>
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-primary">Submit</button>

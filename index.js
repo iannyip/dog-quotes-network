@@ -4,6 +4,9 @@ import pg from "pg";
 import cookieParser from "cookie-parser";
 import methodOverride from "method-override";
 import moment from "moment";
+import multer from 'multer';
+import bodyParser from 'body-parser';
+import Stripe from 'stripe';
 
 // Set up
 const { Pool } = pg;
@@ -16,10 +19,17 @@ const pgConnectionConfig = {
 };
 const pool = new Pool(pgConnectionConfig);
 const app = express();
+const multerUpload = multer({dest: 'profile_pictures/'});
+const secretKey = 'sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m';
+const stripe = new Stripe(secretKey);
+
 app.set("view engine", "ejs");
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
+app.use(express.static('public'));
+app.use('/public', express.static('public')); // Retrieve static files from `public`.
+app.use(express.static('profile_pictures'));
 
 // Create routes
 app.get("/", (request, response) => {
@@ -153,18 +163,19 @@ app.get("/dogs/you/edit", (request, response) => {
     .catch((error) => console.log("error: ", error));
 });
 
-app.put("/dogs/you/edit", (request, response) => {
+app.put("/dogs/you/edit", multerUpload.single('photo'), (request, response) => {
   const formData = request.body;
   const insertData = [
     formData.name,
     formData.dob,
     formData.about,
     formData.status,
+    request.file.filename
   ];
   const { userId } = request.cookies;
   pool
     .query(
-      `UPDATE dogs SET (name, dob, about, status) = ($1, $2, $3, $4) WHERE id=${userId}`,
+      `UPDATE dogs SET (name, dob, about, status, profilepic) = ($1, $2, $3, $4, $5) WHERE id=${userId}`,
       insertData
     )
     .then((result) => {
@@ -324,6 +335,49 @@ app.post("/quote/:id/tip", (request, response) => {
       response.redirect(`/quote/${newTrxn.quote_id}/tip`);
     })
     .catch((error) => console.log(error.stack));
+});
+
+app.get('/feed', (request, response) => {
+  const feed = {};
+  pool
+    .query(`SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id LIMIT 10`)
+    .then((result) => {
+      feed.quotes = result.rows;
+      return pool.query(`SELECT dogs.id, dogs.name, dogs.about, dogs.status, dogs.profilepic, T1.count as followers, T2.count as quotes FROM dogs INNER JOIN (SELECT followed_id, COUNT(*) FROM follows GROUP BY followed_id) AS T1 ON dogs.id = T1.followed_id INNER JOIN (SELECT quoter_id, COUNT(*) FROM quotes GROUP BY quoter_id) AS T2 ON dogs.id = T2.quoter_id LIMIT 10`)
+    })
+    .then((result) => {
+      feed.dogs = result.rows;
+      console.log(feed);
+      response.render('feed', feed);
+    })
+    .catch((error) => console.log(error.stack));
+})
+
+app.get('/topup', (request, response) => {
+  response.render('payment');
+})
+
+app.post("/charge", (req, res) => {
+  req.body
+  try {
+    stripe.customers
+      .create({
+        name: req.body.name,
+        email: req.body.email,
+        source: req.body.stripeToken
+      })
+      .then(customer =>
+        stripe.charges.create({
+          amount: req.body.amount * 100,
+          currency: "sgd",
+          customer: customer.id
+        })
+      )
+      .then(() => res.render("payment_complete"))
+      .catch(err => console.log('banana', err));
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 // Start server

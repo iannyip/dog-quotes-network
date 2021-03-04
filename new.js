@@ -8505,130 +8505,129 @@ const users = [
 ];
 
 const pictures = [
-  "120-1209732_zxc",
-  "172605b91e28d39de018c27eeb1c5324",
-  "2-28657_sdfc234",
-  "40ccbfeecd39be3cb3d5c7231a5cbee8",
-  "41-412707_Vddber345",
-  "45rbm3",
-  "56e53bd754deedf4254a8172e0f7d580--funny-dog-faces-mike-crapo",
-  "aditya-joshi-tVErtb2WNOY-unsplash",
-  "alejandro-contreras-nF86Dc6Ka7U-unsplash",
-  "alvan-nee-ALG4WEte_F4-unsplash",
-  "alvan-nee-T-0EW-SEbsE-unsplash",
-  "anoir-chafik-2_3c4dIFYFU-unsplash",
-  "artur-tumasjan-IbdEj080ag0-unsplash",
-  "asdfd3423dggR3",
-  "ash-goldsbrough-v0_MCllHY9M-unsplash",
-  "aziz-acharki-8c7lqQmcVO0-unsplash",
-  "B98wemmdsf234",
-  "bantersnaps-GvLVxx_VwFE-unsplash",
-  "benigno-hoyuela-QfXjEXyIduw-unsplash",
-  "bharathi-kannan-BrtCGcrZd10-unsplash",
-  "bianka-csenki-7WF-9GaU-cM-unsplash",
-  "BNB8qeb",
-  "bobysbk-Uq0eeHHtSp8-unsplash",
-  "brad-starkey-ipyXCQu2Qwk-unsplash",
-  "camilo-fierro-boEQuTkobH0-unsplash",
-  "camilo-fierro-DjpGPdk2yWk-unsplash",
-  "camilo-fierro-O67BfLHl4C0-unsplash",
-  "camilo-fierro-z7rcwqCi77s-unsplash",
-  "carla-baccari-SrSxjx5FrFc-unsplash",
-  "channey-8CaA24yAr8I-unsplash",
-  "channey-Yn8wfomYYJc-unsplash",
-  "charles-deluvio-m3JNF_96cxo-unsplash",
-  "chewy-4aVJCl7Keg8-unsplash",
-  "chewy-kZRX29xJq6Y-unsplash",
-  "christopher-ayme-ocZ-_Y7-Ptg-unsplash",
-  "daniel-cano-dpb-qhtcA0A-unsplash",
-  "daniel-lincoln-IGZtcY1-pYw-unsplash",
-  "daniel-lincoln-v9nTX4OMNPQ-unsplash",
-  "david-lezcano-m-Doa-GTrUw-unsplash",
-  "dustin-bowdige-XJXzJ6C4JOk-unsplash",
-  "DywhJEoXQAAon8R",
-  "e2i8obgzj8u41",
-  "echo-grid-coheb5v8c0M-unsplash",
-  "eduardo-casajus-gorostiaga-HPuF49ftk2Y-unsplash",
-  "EMqvr1SWkAYMa1M",
-  "erick-e-SqV-_kpS5EI-unsplash",
-  "erin-minuskin-RY-GeAZp-9s-unsplash",
-  "erin-minuskin-uZFwrgLPNOs-unsplash",
-  "filename",
-  "flouffy-uE4Dy_EpoqI-unsplash",
-  "funny-dog-balloons-ceiling-fb__700",
-  "henry-co-6oltp1EYigI-unsplash",
-  "henry-ravenscroft-x2a6oG9lhF0-unsplash",
-  "ian-dooley-5KmrpfJiTSc-unsplash",
-  "ilya-shishikhin-a01Y4ijMFRA-unsplash",
-  "ja-ma-D1XHgtPH-tM-unsplash",
-  "jakob-owens-o0OnkkvJHrg-unsplash",
-  "james-barker-v3-zcCWMjgM-unsplash",
-  "jamie-street-0nk6XZp7_1E-unsplash",
-  "jamie-street-MoDcnVRN5JU-unsplash",
-  "janko-ferlic-ifI0ud6BGfM-unsplash",
-  "jarrod-reed-bCqxxcF_wgY-unsplash",
-  "jay-wennington-CdK2eYhWfQ0-unsplash",
-  "jenny-marvin-sljtwVaSj08-unsplash",
-  "karl-anderson-jKDFcXwk5Cw-unsplash",
-  "karsten-winegeart-BJaqPaH6AGQ-unsplash",
-  "karsten-winegeart-EbV9cE1EiEU-unsplash",
-  "lucrezia-carnelos-F0if-2LD4cA-unsplash",
-  "lucrezia-carnelos-WrG-lFojjW4-unsplash",
-  "luke-jones-tYtJpWoYZQI-unsplash",
-  "margo-brodowicz-TJgn1_dcE1g-unsplash",
-  "mark-zamora-De2HG1rUb0U-unsplash",
-  "mark-zamora-goVQ4tQXdOs-unsplash",
-  "matty-sievers-I1eeK67AXvI-unsplash",
-  "michael-oxendine-t7wwffh6x8E-unsplash",
-  "mitchell-orr-E3AE_2KI0tM-unsplash",
-  "mitchell-orr-PUY5xUszd3Y-unsplash",
-  "mladen-scekic-r3PsLM9oXuU-unsplash",
-  "natalie-scott-dtgatpcQTC8-unsplash",
-  "nathalie-ehrnleitner-QlY0cU58Mr4-unsplash",
-  "nathalie-ehrnleitner-uhCQ17PRtko-unsplash",
-  "nathaniel-bowman-DCOH4VDnEQU-unsplash",
-  "rebekah-howell-KLVmmedAZfs-unsplash",
-  "robert-koorenny-rhH4DnfBwJo-unsplash",
-  "robert-larsson-TkwzP_frzl4-unsplash",
-  "roberto-nickson--s5WfAx74fM-unsplash",
-  "robson-hatsukami-morgan-KGbhqgNykx4-unsplash",
-  "sadgjmn6543",
-  "sd43b",
-  "sharon-mccutcheon-gYxVSeZazXU-unsplash",
-  "simon-moog-_IvTz18z_J8-unsplash",
-  "spencer-davis-jR5rqI4T0Iw-unsplash",
-  "st,small,845x845-pad,1000x1000,f8f8f8",
-  "stephen-leonardi-ARAICylvI7c-unsplash",
-  "successful-business-dog-with-suit-and-money-rain-H7J5A5",
-  "suman-dey-5A7CMyj9VyA-unsplash",
-  "super-dog",
-  "sven-kucinic-u0mo2mpUI8A-unsplash",
-  "vince-veras-yrc30NNlfNI-unsplash",
-  "yasen-iliev-1CYqfE_Zh_M-unsplash",
-  "z8s4zwey1jw31",
+"120-1209732_zxc.png",
+"172605b91e28d39de018c27eeb1c5324.jpg",
+"2-28657_sdfc234.png",
+"40ccbfeecd39be3cb3d5c7231a5cbee8.jpg",
+"41-412707_Vddber345.png",
+"45rbm3.png",
+"56e53bd754deedf4254a8172e0f7d580--funny-dog-faces-mike-crapo.jpg",
+"B98wemmdsf234.jpg",
+"BNB8qeb.jpg",
+"DywhJEoXQAAon8R.jpg",
+"EMqvr1SWkAYMa1M.jpg",
+"aditya-joshi-tVErtb2WNOY-unsplash.jpg",
+"alejandro-contreras-nF86Dc6Ka7U-unsplash.jpg",
+"alvan-nee-ALG4WEte_F4-unsplash.jpg",
+"alvan-nee-T-0EW-SEbsE-unsplash.jpg",
+"anoir-chafik-2_3c4dIFYFU-unsplash.jpg",
+"artur-tumasjan-IbdEj080ag0-unsplash.jpg",
+"asdfd3423dggR3.jpg",
+"ash-goldsbrough-v0_MCllHY9M-unsplash.jpg",
+"aziz-acharki-8c7lqQmcVO0-unsplash.jpg",
+"bantersnaps-GvLVxx_VwFE-unsplash.jpg",
+"benigno-hoyuela-QfXjEXyIduw-unsplash.jpg",
+"bharathi-kannan-BrtCGcrZd10-unsplash.jpg",
+"bianka-csenki-7WF-9GaU-cM-unsplash.jpg",
+"bobysbk-Uq0eeHHtSp8-unsplash.jpg",
+"brad-starkey-ipyXCQu2Qwk-unsplash.jpg",
+"camilo-fierro-DjpGPdk2yWk-unsplash.jpg",
+"camilo-fierro-O67BfLHl4C0-unsplash.jpg",
+"camilo-fierro-boEQuTkobH0-unsplash.jpg",
+"camilo-fierro-z7rcwqCi77s-unsplash.jpg",
+"carla-baccari-SrSxjx5FrFc-unsplash.jpg",
+"channey-8CaA24yAr8I-unsplash.jpg",
+"channey-Yn8wfomYYJc-unsplash.jpg",
+"charles-deluvio-m3JNF_96cxo-unsplash.jpg",
+"chewy-4aVJCl7Keg8-unsplash.jpg",
+"chewy-kZRX29xJq6Y-unsplash.jpg",
+"christopher-ayme-ocZ-_Y7-Ptg-unsplash.jpg",
+"daniel-cano-dpb-qhtcA0A-unsplash.jpg",
+"daniel-lincoln-IGZtcY1-pYw-unsplash.jpg",
+"daniel-lincoln-v9nTX4OMNPQ-unsplash.jpg",
+"david-lezcano-m-Doa-GTrUw-unsplash.jpg",
+"dustin-bowdige-XJXzJ6C4JOk-unsplash.jpg",
+"e2i8obgzj8u41.png",
+"echo-grid-coheb5v8c0M-unsplash.jpg",
+"eduardo-casajus-gorostiaga-HPuF49ftk2Y-unsplash.jpg",
+"erick-e-SqV-_kpS5EI-unsplash.jpg",
+"erin-minuskin-RY-GeAZp-9s-unsplash.jpg",
+"erin-minuskin-uZFwrgLPNOs-unsplash.jpg",
+"flouffy-uE4Dy_EpoqI-unsplash.jpg",
+"funny-dog-balloons-ceiling-fb__700.jpg",
+"henry-co-6oltp1EYigI-unsplash.jpg",
+"henry-ravenscroft-x2a6oG9lhF0-unsplash.jpg",
+"ian-dooley-5KmrpfJiTSc-unsplash.jpg",
+"ilya-shishikhin-a01Y4ijMFRA-unsplash.jpg",
+"ja-ma-D1XHgtPH-tM-unsplash.jpg",
+"jakob-owens-o0OnkkvJHrg-unsplash.jpg",
+"james-barker-v3-zcCWMjgM-unsplash.jpg",
+"jamie-street-0nk6XZp7_1E-unsplash.jpg",
+"jamie-street-MoDcnVRN5JU-unsplash.jpg",
+"janko-ferlic-ifI0ud6BGfM-unsplash.jpg",
+"jarrod-reed-bCqxxcF_wgY-unsplash.jpg",
+"jay-wennington-CdK2eYhWfQ0-unsplash.jpg",
+"jenny-marvin-sljtwVaSj08-unsplash.jpg",
+"karl-anderson-jKDFcXwk5Cw-unsplash.jpg",
+"karsten-winegeart-BJaqPaH6AGQ-unsplash.jpg",
+"karsten-winegeart-EbV9cE1EiEU-unsplash.jpg",
+"lucrezia-carnelos-F0if-2LD4cA-unsplash.jpg",
+"lucrezia-carnelos-WrG-lFojjW4-unsplash.jpg",
+"luke-jones-tYtJpWoYZQI-unsplash.jpg",
+"margo-brodowicz-TJgn1_dcE1g-unsplash.jpg",
+"mark-zamora-De2HG1rUb0U-unsplash.jpg",
+"mark-zamora-goVQ4tQXdOs-unsplash.jpg",
+"matty-sievers-I1eeK67AXvI-unsplash.jpg",
+"michael-oxendine-t7wwffh6x8E-unsplash.jpg",
+"mitchell-orr-E3AE_2KI0tM-unsplash.jpg",
+"mitchell-orr-PUY5xUszd3Y-unsplash.jpg",
+"mladen-scekic-r3PsLM9oXuU-unsplash.jpg",
+"natalie-scott-dtgatpcQTC8-unsplash.jpg",
+"nathalie-ehrnleitner-QlY0cU58Mr4-unsplash.jpg",
+"nathalie-ehrnleitner-uhCQ17PRtko-unsplash.jpg",
+"nathaniel-bowman-DCOH4VDnEQU-unsplash.jpg",
+"rebekah-howell-KLVmmedAZfs-unsplash.jpg",
+"robert-koorenny-rhH4DnfBwJo-unsplash.jpg",
+"robert-larsson-TkwzP_frzl4-unsplash.jpg",
+"roberto-nickson--s5WfAx74fM-unsplash.jpg",
+"robson-hatsukami-morgan-KGbhqgNykx4-unsplash.jpg",
+"sadgjmn6543.jpg",
+"sd43b.png",
+"sharon-mccutcheon-gYxVSeZazXU-unsplash.jpg",
+"simon-moog-_IvTz18z_J8-unsplash.jpg",
+"spencer-davis-jR5rqI4T0Iw-unsplash.jpg",
+"st,small,845x845-pad,1000x1000,f8f8f8.jpg",
+"stephen-leonardi-ARAICylvI7c-unsplash.jpg",
+"successful-business-dog-with-suit-and-money-rain-H7J5A5.jpg",
+"suman-dey-5A7CMyj9VyA-unsplash.jpg",
+"super-dog.jpg",
+"sven-kucinic-u0mo2mpUI8A-unsplash.jpg",
+"vince-veras-yrc30NNlfNI-unsplash.jpg",
+"yasen-iliev-1CYqfE_Zh_M-unsplash.jpg",
+"z8s4zwey1jw31.jpg"
 ];
 
-// for (let i = 0; i < users.length; i += 1) {
-//   // For dogs (name, password, dob, about, status, bank)
-//   console.log(
-//     `('${users[i].name}', '${users[i].password}', '${users[i].dob}', '${users[i].about}', ${users[i].status}, ${users[i].bank}, '${pictures[i]}'),`
-//   );
-// }
-
-// For 500 quotes only
-for (let i = 0; i < 500; i += 1) {
-  // this is the quoter_id or payee_id
-  const userId = (i % 100) + 1;
-
-  // For quotes (quote, quoter_id)
-  // console.log(`('${quote[i].Quote}', ${userId}),`);
-
-  // For transactions (quote_id, payee_id, payer_id, amount)
-  for (let j = 0; j < Math.floor(Math.random() * 5 + 2); j += 1) {
-    console.log(
-      `(${i + 1}, ${userId}, ${
-        Math.floor(Math.random() * 100) + 1
-      }, ${Math.floor(Math.random() * 100)}),`
-    );
-  }
+for (let i = 0; i < users.length; i += 1) {
+  // For dogs (name, password, dob, about, status, bank)
+  console.log(
+    `('${users[i].name}', '${users[i].password}', '${users[i].dob}', '${users[i].about}', ${users[i].status}, ${users[i].bank}, '${pictures[i]}'),`
+  );
 }
+
+// // For 500 quotes only
+// for (let i = 0; i < 500; i += 1) {
+//   // this is the quoter_id or payee_id
+//   const userId = (i % 100) + 1;
+
+//   // For quotes (quote, quoter_id)
+//   // console.log(`('${quote[i].Quote}', ${userId}),`);
+
+//   // For transactions (quote_id, payee_id, payer_id, amount)
+//   for (let j = 0; j < Math.floor(Math.random() * 5 + 2); j += 1) {
+//     console.log(
+//       `(${i + 1}, ${userId}, ${
+//         Math.floor(Math.random() * 100) + 1
+//       }, ${Math.floor(Math.random() * 100)}),`
+//     );
+//   }
+// }
