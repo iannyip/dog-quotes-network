@@ -12,3 +12,8 @@
   height: 100%;
   width: auto;
 }
+
+#card-element {
+  height: 2.2rem;
+  font-size: 2rem;
+}

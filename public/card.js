@@ -38,6 +38,7 @@ form.addEventListener('submit', e => {
     .then(result => {
       console.log(result);
       if (result.error) {
+        errorEl.classList.add('alert-danger');
         errorEl.textContent = result.error.message;
         console.log(result.error);
       } else {
