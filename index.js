@@ -21,7 +21,7 @@ const SALT = process.env.salt;
 
 // Set up
 const { Pool } = pg;
-const pgConnectionConfig;
+let pgConnectionConfig;
 if (process.env.ENV === 'PRODUCTION'){
   pgConnectionConfig = {
     user: "postgres",
