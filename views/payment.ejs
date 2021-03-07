@@ -18,6 +18,7 @@
             type="text"
             name="name"
             placeholder="Name"
+            value="<%= info.name %>"
           />
           <input
             type="email"
@@ -31,7 +32,8 @@
             name="amount"
             placeholder="Amount"
           />
-
+          <input type="hidden" name='bank' value= <%= info.bank %>>
+          <input type="hidden" name='id' value= <%= info.id %>>
           <div
             id="card-element"
             class="form-control my-2 "

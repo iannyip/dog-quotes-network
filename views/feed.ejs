@@ -9,6 +9,14 @@
       <div class='row justify-content-between'>
         <!-- quotes -->
         <div class='col-md-6 row vh-100 overflow-auto'>
+          <div class='dropdown'>
+            <button class='btn btn-secondary dropdown-toggle' type='button' id='filterFeedDropdown' data-toggle='dropdown'>Filter</button>
+            <div class='dropdown-menu'>
+              <a class='dropdown-item' href="/feed/?filter=all">All</a>
+              <a class='dropdown-item' href="/feed/?filter=top">Top</a>
+              <a class='dropdown-item' href="/feed/?filter=following">Following</a>
+            </div>
+          </div>
           <% quotes.forEach(quote => { %>
             <a href="/quote/<%= quote.id %>/tip" style="text-decoration: none; color:#212529">
               <div class='col-12 border'>
@@ -28,6 +36,18 @@
         </div>
         <!-- users -->
         <div class='col-md-5 vh-100 overflow-auto'>
+          <form id='filterDogsFeed' action="">
+            <div class='form-control autocomplete'>
+              <input id='myInput' list='dogs' name='name' placeholder='Search doggo'>
+              <datalist id='dogs'>
+                <% dogs.forEach(dog => { %>
+                  <option value="<%= dog.name %>"></option>
+                <% }) %>
+              </datalist>
+              <button class='btn btn-primary' type='submit'>Search</button>
+            </div>
+            
+          </form>
           <% dogs.forEach(dog => { %>
             <div class='row border py-1'>
               <div class="col-3" >
@@ -41,12 +61,17 @@
                 <p><%= dog.followers %> followers | <%= dog.quotes %> quotes</p>
               </div>
             </div>
+            
           <% }); %>
+          
         </div>
       </div>
     </div>
-
     <%- include ('partial/requiredjs') %>
+    <!-- <script src="ejs.js"></script> -->
+      
+    <script>
 
+    </script>
   </body>
 </html>
