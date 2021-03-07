@@ -9,21 +9,39 @@ import bodyParser from "body-parser";
 import Stripe from "stripe";
 import jsSHA from 'jssha';
 
+// For deployment
+const PORT = process.argv[2];
+const secretKey = process.env.stripeSecretKey;
+const SALT = process.env.salt;
+// const PORT = 3004;
+// const SALT = 'keep barking';
+// const secretKey =
+//   "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
+
+
 // Set up
 const { Pool } = pg;
-const PORT = 3004;
-const pgConnectionConfig = {
-  user: "iannyip",
-  host: "localhost",
-  database: "doggos",
-  port: 5432,
-};
+const pgConnectionConfig;
+if (process.env.ENV === 'PRODUCTION'){
+  pgConnectionConfig = {
+    user: "postgres",
+    password: process.env.DB_password,
+    host: "localhost",
+    database: "doggos",
+    port: 5432,
+  };
+} else {
+  pgConnectionConfig = {
+    user: "iannyip",
+    host: "localhost",
+    database: "doggos",
+    port: 5432,
+  };
+}
+
 const pool = new Pool(pgConnectionConfig);
 const app = express();
 const multerUpload = multer({ dest: "profile_pictures/" });
-const SALT = 'keep barking';
-const secretKey =
-  "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
 const stripe = new Stripe(secretKey);
 
 app.set("view engine", "ejs");
