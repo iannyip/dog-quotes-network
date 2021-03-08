@@ -10,13 +10,13 @@ import Stripe from "stripe";
 import jsSHA from 'jssha';
 
 // For deployment
-const PORT = process.argv[2];
-const secretKey = process.env.stripeSecretKey;
-const SALT = process.env.salt;
-// const PORT = 3004;
-// const SALT = 'keep barking';
-// const secretKey =
-//   "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
+// const PORT = process.argv[2];
+// const secretKey = process.env.stripeSecretKey;
+// const SALT = process.env.salt;
+const PORT = 3004;
+const SALT = 'keep barking';
+const secretKey =
+  "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
 
 
 // Set up
@@ -66,10 +66,6 @@ const setHash= (input, type) => {
   return hashedString;
 }
 
-const testAuth = (request, response, next) => {
-  console.log('testAuth');
-}
-
 const checkAuth = (request, response, next) => {
   if (request.isUserLoggedIn === false ){
     response.clearCookie("userId");
@@ -100,7 +96,7 @@ app.use((request, response, next) => {
 });
 
 // Create routes
-app.get("/", (request, response) => {
+app.get("/", checkAuth, (request, response) => {
   response.render("root");
 });
 
@@ -294,26 +290,33 @@ app.get("/signup/1", (request, response) => {
 
 app.post("/signup/1", (request, response) => {
   const newUserDataPartial = request.body;
+  newUserDataPartial.password = setHash(newUserDataPartial.password, 'password')
   console.log(newUserDataPartial);
   response.render("signup2", newUserDataPartial);
 });
 
 app.post("/signup/2", (request, response) => {
+  const newUserDataPartial = request.body;
+  console.log(newUserDataPartial);
+  response.render("signup3", newUserDataPartial);
+})
+
+app.post("/signup/3", multerUpload.single('profilepic'), (request, response) => {
   const newUserData = request.body;
-  const hashedPassword = setHash(newUserData.password, 'password')
   const inputNewUser = [
     newUserData.name,
-    hashedPassword,
+    newUserData.password,
     newUserData.dob,
     newUserData.about,
+    request.file.filename
   ];
   pool
     .query(
-      `INSERT INTO dogs (name, password, dob, about, status) VALUES ($1, $2, $3, $4, 1)`,
+      `INSERT INTO dogs (name, password, dob, about, status, bank, profilepic) VALUES ($1, $2, $3, $4, 1, 0, $5)`,
       inputNewUser
     )
     .then((result) => {
-      const queryUserArr = [newUserData.name, hashedPassword];
+      const queryUserArr = [newUserData.name, newUserData.password];
       return pool.query(
         `SELECT * FROM dogs WHERE (name=$1 AND password=$2)`,
         queryUserArr
@@ -323,7 +326,7 @@ app.post("/signup/2", (request, response) => {
       const newUserId = result.rows[0].id;
       response.cookie("session", setHash(newUserId, 'session'));
       response.cookie("userId", newUserId);
-      response.redirect("/dogs");
+      response.redirect("/feed");
     })
     .catch((error) => console.log(error));
 });
@@ -495,6 +498,23 @@ app.get('/test', (request, response) => {
     response.redirect('/login');
   })
   .catch((error) => {console.log(error)})
+})
+
+app.post('/feedsearch', (request, response) => {
+  console.log(request.body.name);
+  pool
+    .query(`SELECT * FROM dogs WHERE name='${request.body.name}'`)
+    .then((result) => {
+      if (result.rows[0]){
+        console.log('found');
+        const user = result.rows[0];
+        response.redirect(`/dogs/profile/${user.id}`);
+      } else {
+        return;
+      }
+    })
+    .catch((error) => console.log(error))
+  // response.redirect('/feed');
 })
 
 // Start server

@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light clear-navbar px-4 container">
   <!-- Brand -->
-  <a class="navbar-brand" href="/feed">Doquotes</a>
+  <a class="navbar-brand d-lg-none" href="/feed">Doquotes</a>
 
   <!-- Dropdown -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,31 +8,23 @@
   </button>
 
   <!-- Items in navbar -->
-  <div class="collapse navbar-collapse w-100" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
+  <div class="collapse navbar-collapse justify-content-around" id="navbarSupportedContent">
+    <ul class="navbar-nav w-75 justify-content-end">
       <li class="nav-item">
         <a class="nav-link" href="/feed">Feed</a>
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="/dogs">Dogs</a>
-      </li> -->
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="/quotes">Quotes</a>
-      </li> -->
       <li class="nav-item">
         <a class="nav-link" href="/dogs/you">You</a>
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="/topup">Topup</a>
-      </li> -->
     </ul>
-    <ul class="navbar-nav ml-auto">
+    <a class="navbar-brand d-none d-lg-block mx-4" href="/feed">Doquotes</a>
+    <ul class="navbar-nav w-75 justify-content-end">
       <li class="nav-item">
-        <a class="nav-link" href="/help">?</a>
+        <a class="nav-link d-flex align-bottom" href="/help"><i class="bi bi-question-circle"></i></a>
       </li>
       <li class='nav-item'>
         <form action="/logout?_method=DELETE" method='POST'>
-          <button type='submit' class='nav-link btn btn-danger'>Logout</button>
+          <button type='submit' class='nav-link btn btn-link'>Logout</button>
         </form>
       </li>
     </ul>
