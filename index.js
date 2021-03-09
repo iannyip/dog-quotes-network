@@ -10,13 +10,13 @@ import Stripe from "stripe";
 import jsSHA from "jssha";
 
 // For deployment
-// const PORT = process.argv[2];
-// const secretKey = process.env.stripeSecretKey;
-// const SALT = process.env.salt;
-const PORT = 3004;
-const SALT = "keep barking";
-const secretKey =
-  "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
+const PORT = process.argv[2];
+const secretKey = process.env.stripeSecretKey;
+const SALT = process.env.salt;
+// const PORT = 3004;
+// const SALT = "keep barking";
+// const secretKey =
+//   "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
 
 // Set up
 const { Pool } = pg;
@@ -468,14 +468,14 @@ app.get("/feed", checkAuth, (request, response) => {
     feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id WHERE quotes.quoter_id IN (SELECT followed_id FROM follows WHERE follower_id= ${userId}) ORDER BY quotes.created_at DESC`;
   }
 
-  feedQuoteQuery += " LIMIT 20";
+  // feedQuoteQuery += " LIMIT 20";
   console.log(feedQuoteQuery);
   pool
     .query(feedQuoteQuery)
     .then((result) => {
       feed.quotes = result.rows;
       return pool.query(
-        `SELECT dogs.id, dogs.name, dogs.about, dogs.status, dogs.profilepic, T1.count as followers, T2.count as quotes FROM dogs INNER JOIN (SELECT followed_id, COUNT(*) FROM follows GROUP BY followed_id) AS T1 ON dogs.id = T1.followed_id INNER JOIN (SELECT quoter_id, COUNT(*) FROM quotes GROUP BY quoter_id) AS T2 ON dogs.id = T2.quoter_id LIMIT 20`
+        `SELECT dogs.id, dogs.name, dogs.about, dogs.status, dogs.profilepic, T1.count as followers, T2.count as quotes FROM dogs INNER JOIN (SELECT followed_id, COUNT(*) FROM follows GROUP BY followed_id) AS T1 ON dogs.id = T1.followed_id INNER JOIN (SELECT quoter_id, COUNT(*) FROM quotes GROUP BY quoter_id) AS T2 ON dogs.id = T2.quoter_id`
       );
     })
     .then((result) => {
