@@ -7,22 +7,21 @@ import moment from "moment";
 import multer from "multer";
 import bodyParser from "body-parser";
 import Stripe from "stripe";
-import jsSHA from 'jssha';
+import jsSHA from "jssha";
 
 // For deployment
 // const PORT = process.argv[2];
 // const secretKey = process.env.stripeSecretKey;
 // const SALT = process.env.salt;
 const PORT = 3004;
-const SALT = 'keep barking';
+const SALT = "keep barking";
 const secretKey =
   "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
-
 
 // Set up
 const { Pool } = pg;
 let pgConnectionConfig;
-if (process.env.ENV === 'PRODUCTION'){
+if (process.env.ENV === "PRODUCTION") {
   pgConnectionConfig = {
     user: "postgres",
     password: process.env.DB_password,
@@ -53,28 +52,28 @@ app.use("/public", express.static("public")); // Retrieve static files from `pub
 app.use(express.static("profile_pictures"));
 
 // Helper functions
-const setHash= (input, type) => {
-  const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8'});
+const setHash = (input, type) => {
+  const shaObj = new jsSHA("SHA-512", "TEXT", { encoding: "UTF8" });
   let stringToHash;
-  if (type === 'session') {
+  if (type === "session") {
     stringToHash = `${input}-${SALT}`;
-  } else if (type === 'password'){
+  } else if (type === "password") {
     stringToHash = `${input}`;
   }
   shaObj.update(stringToHash);
-  const hashedString = shaObj.getHash('HEX');
+  const hashedString = shaObj.getHash("HEX");
   return hashedString;
-}
+};
 
 const checkAuth = (request, response, next) => {
-  if (request.isUserLoggedIn === false ){
+  if (request.isUserLoggedIn === false) {
     response.clearCookie("userId");
     response.clearCookie("session");
     response.redirect("/login");
     return;
   }
   next();
-}
+};
 
 app.use((request, response, next) => {
   // set the default value
@@ -83,7 +82,7 @@ app.use((request, response, next) => {
   // check to see if the cookies you need exists
   if (request.cookies.session && request.cookies.userId) {
     // get the hased value that should be inside the cookie
-    const hash = setHash(request.cookies.userId,'session');
+    const hash = setHash(request.cookies.userId, "session");
 
     // test the value of the cookie
     if (request.cookies.session === hash) {
@@ -170,16 +169,21 @@ app.get("/dogs/profile/:id", (request, response) => {
     .query(`SELECT * FROM dogs WHERE id=${id}`)
     .then((result) => {
       userData.info = result.rows[0];
+      userData.info.dob = moment(userData.info.dob).format("D MMM YYYY");
       return pool.query(`SELECT * FROM quotes WHERE quoter_id=${id}`);
     })
     .then((result) => {
       userData.quotes = result.rows;
+      userData.quotes.forEach((quote) => {
+        quote.created_at = moment(quote.created_at).fromNow();
+      });
       return pool.query(`SELECT COUNT(*) FROM follows WHERE followed_id=${id}`);
     })
     .then((result) => {
       if (result.rows.length === 0) {
         userData.followers = 0;
       } else {
+        userData.info.followers = result.rows[0].count;
         userData.followers = result.rows[0].count;
       }
       return pool.query(
@@ -192,6 +196,10 @@ app.get("/dogs/profile/:id", (request, response) => {
       } else {
         userData.followStatus = true;
       }
+      return pool.query(`SELECT COUNT(*) FROM follows WHERE follower_id=${id}`);
+    })
+    .then((result) => {
+      userData.info.following = result.rows[0].count;
       console.log(userData);
       response.render("dog-single", userData);
     })
@@ -205,10 +213,26 @@ app.get("/dogs/you", (request, response) => {
     .query(`SELECT * FROM dogs WHERE id=${userId}`)
     .then((result) => {
       userData.info = result.rows[0];
+      userData.info.dob = moment(userData.info.dob).format("D MMM YYYY");
       return pool.query(`SELECT * FROM quotes WHERE quoter_id=${userId}`);
     })
     .then((result) => {
       userData.quotes = result.rows;
+      userData.quotes.forEach((quote) => {
+        quote.created_at = moment(quote.created_at).fromNow();
+      });
+      return pool.query(
+        `SELECT COUNT(*) FROM follows WHERE follower_id=${userId}`
+      );
+    })
+    .then((result) => {
+      userData.info.following = result.rows[0].count;
+      return pool.query(
+        `SELECT COUNT(*) FROM follows WHERE followed_id=${userId}`
+      );
+    })
+    .then((result) => {
+      userData.info.followers = result.rows[0].count;
       console.log(userData);
       response.render("dogs-you", userData);
     })
@@ -259,7 +283,7 @@ app.get("/login", (request, response) => {
 app.post("/login", (request, response) => {
   const loginDetails = request.body;
   // Hash password
-  const hashedPassword = setHash(loginDetails.password, 'password');
+  const hashedPassword = setHash(loginDetails.password, "password");
 
   pool
     .query(`SELECT * FROM dogs WHERE name='${loginDetails.name}'`)
@@ -271,7 +295,7 @@ app.post("/login", (request, response) => {
       } else {
         const user = result.rows[0];
         if (user.password === hashedPassword) {
-          const hashedCookie = setHash(user.id, 'session');
+          const hashedCookie = setHash(user.id, "session");
           response.cookie("session", hashedCookie);
           response.cookie("userId", user.id);
           response.redirect("/feed");
@@ -290,7 +314,10 @@ app.get("/signup/1", (request, response) => {
 
 app.post("/signup/1", (request, response) => {
   const newUserDataPartial = request.body;
-  newUserDataPartial.password = setHash(newUserDataPartial.password, 'password')
+  newUserDataPartial.password = setHash(
+    newUserDataPartial.password,
+    "password"
+  );
   console.log(newUserDataPartial);
   response.render("signup2", newUserDataPartial);
 });
@@ -299,37 +326,41 @@ app.post("/signup/2", (request, response) => {
   const newUserDataPartial = request.body;
   console.log(newUserDataPartial);
   response.render("signup3", newUserDataPartial);
-})
-
-app.post("/signup/3", multerUpload.single('profilepic'), (request, response) => {
-  const newUserData = request.body;
-  const inputNewUser = [
-    newUserData.name,
-    newUserData.password,
-    newUserData.dob,
-    newUserData.about,
-    request.file.filename
-  ];
-  pool
-    .query(
-      `INSERT INTO dogs (name, password, dob, about, status, bank, profilepic) VALUES ($1, $2, $3, $4, 1, 0, $5)`,
-      inputNewUser
-    )
-    .then((result) => {
-      const queryUserArr = [newUserData.name, newUserData.password];
-      return pool.query(
-        `SELECT * FROM dogs WHERE (name=$1 AND password=$2)`,
-        queryUserArr
-      );
-    })
-    .then((result) => {
-      const newUserId = result.rows[0].id;
-      response.cookie("session", setHash(newUserId, 'session'));
-      response.cookie("userId", newUserId);
-      response.redirect("/feed");
-    })
-    .catch((error) => console.log(error));
 });
+
+app.post(
+  "/signup/3",
+  multerUpload.single("profilepic"),
+  (request, response) => {
+    const newUserData = request.body;
+    const inputNewUser = [
+      newUserData.name,
+      newUserData.password,
+      newUserData.dob,
+      newUserData.about,
+      request.file.filename,
+    ];
+    pool
+      .query(
+        `INSERT INTO dogs (name, password, dob, about, status, bank, profilepic) VALUES ($1, $2, $3, $4, 1, 0, $5)`,
+        inputNewUser
+      )
+      .then((result) => {
+        const queryUserArr = [newUserData.name, newUserData.password];
+        return pool.query(
+          `SELECT * FROM dogs WHERE (name=$1 AND password=$2)`,
+          queryUserArr
+        );
+      })
+      .then((result) => {
+        const newUserId = result.rows[0].id;
+        response.cookie("session", setHash(newUserId, "session"));
+        response.cookie("userId", newUserId);
+        response.redirect("/feed");
+      })
+      .catch((error) => console.log(error));
+  }
+);
 
 app.delete("/logout", (request, response) => {
   response.clearCookie("userId");
@@ -410,10 +441,14 @@ app.post("/quote/:id/tip", (request, response) => {
       inputData
     )
     .then(() => {
-      return pool.query(`UPDATE dogs SET bank= bank-${newTrxn.amount} WHERE id=${newTrxn.payer_id}`)
+      return pool.query(
+        `UPDATE dogs SET bank= bank-${newTrxn.amount} WHERE id=${newTrxn.payer_id}`
+      );
     })
     .then(() => {
-      return pool.query(`UPDATE dogs SET bank= bank+${newTrxn.amount} WHERE id=${newTrxn.payee_id}`)
+      return pool.query(
+        `UPDATE dogs SET bank= bank+${newTrxn.amount} WHERE id=${newTrxn.payee_id}`
+      );
     })
     .then((result) => {
       response.redirect(`/quote/${newTrxn.quote_id}/tip`);
@@ -424,16 +459,16 @@ app.post("/quote/:id/tip", (request, response) => {
 app.get("/feed", checkAuth, (request, response) => {
   const feed = {};
   const { userId } = request.cookies;
-  console.log('userlogin:', request.isUserLoggedIn);
-  
+  console.log("userlogin:", request.isUserLoggedIn);
+
   let feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id ORDER BY quotes.created_at DESC`;
-  if (request.query.filter === 'top'){
+  if (request.query.filter === "top") {
     feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id ORDER BY amount DESC`;
-  } else if (request.query.filter === 'following') {
-    feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id WHERE quotes.quoter_id IN (SELECT followed_id FROM follows WHERE follower_id= ${userId}) ORDER BY quotes.created_at DESC`
+  } else if (request.query.filter === "following") {
+    feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id WHERE quotes.quoter_id IN (SELECT followed_id FROM follows WHERE follower_id= ${userId}) ORDER BY quotes.created_at DESC`;
   }
 
-  feedQuoteQuery += ' LIMIT 20';
+  feedQuoteQuery += " LIMIT 20";
   console.log(feedQuoteQuery);
   pool
     .query(feedQuoteQuery)
@@ -448,16 +483,16 @@ app.get("/feed", checkAuth, (request, response) => {
       response.render("feed", feed);
     })
     .catch((error) => console.log(error.stack));
-}); 
+});
 
-app.get("/topup",checkAuth, (request, response) => {
+app.get("/topup", checkAuth, (request, response) => {
   const { userId } = request.cookies;
   pool
     .query(`SELECT * FROM dogs WHERE id=${userId}`)
     .then((result) => {
       const info = result.rows[0];
       console.log(info);
-      response.render("payment", {info});
+      response.render("payment", { info });
     })
     .catch((error) => console.log(error));
 });
@@ -481,7 +516,11 @@ app.post("/charge", (req, res) => {
       )
       .then(() => {
         const updatedBank = Number(req.body.bank) + Number(req.body.amount);
-        return pool.query(`UPDATE dogs SET bank = ${updatedBank} WHERE id=${Number(req.body.id)}`);
+        return pool.query(
+          `UPDATE dogs SET bank = ${updatedBank} WHERE id=${Number(
+            req.body.id
+          )}`
+        );
       })
       .then(() => res.render("payment_complete"))
       .catch((err) => console.log("banana", err));
@@ -490,32 +529,38 @@ app.post("/charge", (req, res) => {
   }
 });
 
-app.get('/test', (request, response) => {
-  const testQuery = `UPDATE dogs SET password = '${setHash('nsMAC8cgG','password')}' WHERE id=1`;
-  pool.query(testQuery)
-  .then((result) => {
-    console.log(result.rows);
-    response.redirect('/login');
-  })
-  .catch((error) => {console.log(error)})
-})
+app.get("/test", (request, response) => {
+  const testQuery = `UPDATE dogs SET password = '${setHash(
+    "nsMAC8cgG",
+    "password"
+  )}' WHERE id=1`;
+  pool
+    .query(testQuery)
+    .then((result) => {
+      console.log(result.rows);
+      response.redirect("/login");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
 
-app.post('/feedsearch', (request, response) => {
+app.post("/feedsearch", (request, response) => {
   console.log(request.body.name);
   pool
     .query(`SELECT * FROM dogs WHERE name='${request.body.name}'`)
     .then((result) => {
-      if (result.rows[0]){
-        console.log('found');
+      if (result.rows[0]) {
+        console.log("found");
         const user = result.rows[0];
         response.redirect(`/dogs/profile/${user.id}`);
       } else {
         return;
       }
     })
-    .catch((error) => console.log(error))
+    .catch((error) => console.log(error));
   // response.redirect('/feed');
-})
+});
 
 // Start server
 console.log("Starting server...");

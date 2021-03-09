@@ -46,7 +46,7 @@
           <!-- Mobile: searchbar for -->
           <div id='dogSearchBar1' class='d-lg-none'>
             <form id='filterDogsFeed' action="/feedsearch" method='POST'>
-              <div class='form-control autocomplete'>
+              <div class='form-control autocomplete' style='border:none'>
                 <input id='myInput' list='dogs' name='name' placeholder='Search doggo'>
                 <datalist id='dogs'>
                   <% dogs.forEach(dog => { %>
@@ -57,12 +57,13 @@
               </div>
             </form>
           </div>
+          <!-- quotes list -->
           <div id="quoteFeedList" class='overflow-auto feed-fix-height' data-simplebar>
             <ul style='padding-left:5px'>
               <% quotes.forEach(quote => { %>
               <a href="/quote/<%= quote.id %>/tip" style="text-decoration: none; color:#212529">
                 <li style="list-style-type: none;">
-                  <div class='card my-2 zoom py-0'>
+                  <div class='card my-2 zoom py-0' style='margin-right: 10px'>
                     <div class='card-body'>
                       <p class='lead'><%= quote.quote %></p>
                       <div class='row'>
