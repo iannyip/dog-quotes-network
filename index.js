@@ -10,13 +10,9 @@ import Stripe from "stripe";
 import jsSHA from "jssha";
 
 // For deployment
-const PORT = process.argv[2];
-const secretKey = process.env.stripeSecretKey;
-const SALT = process.env.salt;
-// const PORT = 3004;
-// const SALT = "keep barking";
-// const secretKey =
-//   "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
+const PORT = process.argv[2] || 3004;
+const SALT = process.env.salt || "keep barking"
+const secretKey = process.env.stripeSecretKey || "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
 
 // Set up
 const { Pool } = pg;
@@ -116,14 +112,12 @@ app.get("/quote/new", (request, response) => {
 
 app.post("/quote/new", (request, response) => {
   const newQuoteData = request.body;
-  console.log(newQuoteData);
+  const { userId } = request.cookies;
   pool
     .query(
-      `INSERT INTO quotes (quote, quoter_id) VALUES ('${
-        newQuoteData.quote
-      }', ${Number(newQuoteData.quoter_id)})`
+      `INSERT INTO quotes (quote, quoter_id) VALUES ('${newQuoteData.quote}', ${Number(userId)})`
     )
-    .then((result) => response.redirect("/quotes"))
+    .then((result) => response.redirect("/feed"))
     .catch((error) => console.log(error));
 });
 
@@ -461,7 +455,14 @@ app.get("/feed", checkAuth, (request, response) => {
   const { userId } = request.cookies;
   console.log("userlogin:", request.isUserLoggedIn);
 
-  let feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id ORDER BY quotes.created_at DESC`;
+  let feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount 
+  FROM quotes 
+  INNER JOIN dogs 
+  ON quotes.quoter_id = dogs.id 
+  LEFT JOIN (SELECT quote_id, COUNT(*), sum(amount) 
+  FROM transactions GROUP BY quote_id) AS T1 
+  ON quotes.id = T1.quote_id 
+  ORDER BY quotes.created_at DESC`;
   if (request.query.filter === "top") {
     feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id ORDER BY amount DESC`;
   } else if (request.query.filter === "following") {

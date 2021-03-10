@@ -24,25 +24,53 @@
               <a href="/dogs/profile/<%= dog.id %>"><%= dog.name %></a>
             </li>  
           <% }); %>
-
         </ul>
-
-
       </div>
 
       <div class='row justify-content-around'>
         <!-- quotes -->
         <div class='col-lg-6 row'>
-          <div id='filterbar'>
-            <div class='dropdown'>
-              <button class='btn btn-secondary dropdown-toggle' type='button' id='filterFeedDropdown' data-toggle='dropdown'>Filter</button>
-              <div class='dropdown-menu'>
-                <a class='dropdown-item' href="/feed/?filter=all">All</a>
-                <a class='dropdown-item' href="/feed/?filter=top">Top</a>
-                <a class='dropdown-item' href="/feed/?filter=following">Following</a>
+          
+          <div class="row">
+            <!-- Quotes filter -->
+            <div class='col-4' id='filterbar'>
+              <div class='dropdown'>
+                <button class='btn btn-secondary dropdown-toggle' type='button' id='filterFeedDropdown' data-toggle='dropdown'>Filter</button>
+                <div class='dropdown-menu'>
+                  <a class='dropdown-item' href="/feed/?filter=all">All</a>
+                  <a class='dropdown-item' href="/feed/?filter=top">Top</a>
+                  <a class='dropdown-item' href="/feed/?filter=following">Following</a>
+                </div>
               </div>
             </div>
+            <!-- New quote -->
+            <div class='col-4'>
+              <button type='button' class='btn btn-primary' data-toggle="modal" data-target="#newQuoteModal">New Quote</button>
+              <div class='modal fade' id='newQuoteModal' tab-index='-1' role='dialog' aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role='document'>
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class='modal-title'>New Quote</h5>
+                      <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class='modal-body'>
+                      <form action="/quote/new" id='quoteForm' method='POST'>
+                        <textarea name="quote" id="quote" class="form-control" rows="5" placeholder='Why waste time say lot word when few word do trick'></textarea>
+                      </form>
+                    </div>
+                    <div class='modal-footer'>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" form='quoteForm' class="btn btn-primary">Post</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
+          
           <!-- Mobile: searchbar for -->
           <div id='dogSearchBar1' class='d-lg-none'>
             <form id='filterDogsFeed' action="/feedsearch" method='POST'>
@@ -59,7 +87,7 @@
           </div>
           <!-- quotes list -->
           <div id="quoteFeedList" class='overflow-auto feed-fix-height' data-simplebar>
-            <ul style='padding-left:5px'>
+            <ul style='padding-left:10px'>
               <% quotes.forEach(quote => { %>
               <a href="/quote/<%= quote.id %>/tip" style="text-decoration: none; color:#212529">
                 <li style="list-style-type: none;">
@@ -85,6 +113,7 @@
         </div>
         <!-- users -->
         <div class='col-lg-5 d-none d-lg-block'>
+          <!-- Search bar -->
           <div id='dogSearchBar'>
             <form id='filterDogsFeed' action="/feedsearch" method='POST'>
               <div class='form-control autocomplete'>
@@ -98,6 +127,7 @@
               </div>
             </form>
           </div>
+          <!-- List of users -->
           <div id='dogFeedList' class='overflow-auto feed-fix-height' data-simplebar>
             <% dogs.forEach(dog => { %>
               <div class='row border py-1'>
