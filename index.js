@@ -11,8 +11,10 @@ import jsSHA from "jssha";
 
 // For deployment
 const PORT = process.argv[2] || 3004;
-const SALT = process.env.salt || "keep barking"
-const secretKey = process.env.stripeSecretKey || "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
+const SALT = process.env.salt || "keep barking";
+const secretKey =
+  process.env.stripeSecretKey ||
+  "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
 
 // Set up
 const { Pool } = pg;
@@ -92,7 +94,7 @@ app.use((request, response, next) => {
 
 // Create routes
 app.get("/", checkAuth, (request, response) => {
-  response.render("root");
+  response.redirect("/feed");
 });
 
 app.get("/quotes", (request, response) => {
@@ -115,7 +117,9 @@ app.post("/quote/new", (request, response) => {
   const { userId } = request.cookies;
   pool
     .query(
-      `INSERT INTO quotes (quote, quoter_id) VALUES ('${newQuoteData.quote}', ${Number(userId)})`
+      `INSERT INTO quotes (quote, quoter_id) VALUES ('${
+        newQuoteData.quote
+      }', ${Number(userId)})`
     )
     .then((result) => response.redirect("/feed"))
     .catch((error) => console.log(error));
@@ -476,7 +480,12 @@ app.get("/feed", checkAuth, (request, response) => {
     .then((result) => {
       feed.quotes = result.rows;
       return pool.query(
-        `SELECT dogs.id, dogs.name, dogs.about, dogs.status, dogs.profilepic, T1.count as followers, T2.count as quotes FROM dogs INNER JOIN (SELECT followed_id, COUNT(*) FROM follows GROUP BY followed_id) AS T1 ON dogs.id = T1.followed_id INNER JOIN (SELECT quoter_id, COUNT(*) FROM quotes GROUP BY quoter_id) AS T2 ON dogs.id = T2.quoter_id`
+        `SELECT dogs.id, dogs.name, dogs.about, dogs.status, dogs.profilepic, T1.count as followers, T2.count as quotes 
+        FROM dogs 
+        INNER JOIN (SELECT followed_id, COUNT(*) FROM follows GROUP BY followed_id) AS T1 
+        ON dogs.id = T1.followed_id 
+        INNER JOIN (SELECT quoter_id, COUNT(*) FROM quotes GROUP BY quoter_id) AS T2 
+        ON dogs.id = T2.quoter_id`
       );
     })
     .then((result) => {

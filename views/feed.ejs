@@ -12,48 +12,66 @@
     <%- include ('partial/navbar') %>
     <div class='container-fluid'>
       <!-- mobile: Users in top horizontal row -->
-      <div class='row vw-100 overflow-auto mx-3 my-2 d-lg-none' data-simplebar>
-        <ul class='list-group list-group-horizontal'>
-          <% dogs.forEach(dog => { %>
-            <li class='list-group-item text-center' style='min-width: 100px; border:none;'>
-              <div style='background: url("/<%= dog.profilepic%>");
-                background-size: cover;
-                background-position: center;' 
-                class='small-image-cropper'>
-              </div>
-              <a href="/dogs/profile/<%= dog.id %>"><%= dog.name %></a>
-            </li>  
-          <% }); %>
-        </ul>
+      <div class="row">
+        <div class='col vw-100 overflow-auto mx-3 my-2 d-lg-none' data-simplebar>
+          <ul class='list-group list-group-horizontal'>
+            <% dogs.forEach(dog => { %>
+              <li class='list-group-item text-center' style='min-width: 75px; border:none;'>
+                <div style='background: url("/<%= dog.profilepic%>");
+                  background-size: cover;
+                  background-position: center;' 
+                  class='small-image-cropper'>
+                </div>
+                <a href="/dogs/profile/<%= dog.id %>" class='lead mobile-name-link'><%= dog.name %></a>
+              </li>  
+            <% }); %>
+          </ul>
+        </div>
       </div>
-
+      
       <div class='row justify-content-around'>
         <!-- quotes -->
         <div class='col-lg-6 row'>
           
           <div class="row">
-            <!-- Quotes filter -->
-            <div class='col-4' id='filterbar'>
-              <div class='dropdown'>
-                <button class='btn btn-secondary dropdown-toggle' type='button' id='filterFeedDropdown' data-toggle='dropdown'>Filter</button>
-                <div class='dropdown-menu'>
-                  <a class='dropdown-item' href="/feed/?filter=all">All</a>
-                  <a class='dropdown-item' href="/feed/?filter=top">Top</a>
-                  <a class='dropdown-item' href="/feed/?filter=following">Following</a>
+            <div class="col">
+              <!-- Chio -->
+              <ul class="nav justify-content-start">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-funnel"></i></a>
+                  <div class="dropdown-menu">
+                    <a class='dropdown-item' href="/feed/?filter=all">All</a>
+                    <a class='dropdown-item' href="/feed/?filter=top">Top</a>
+                    <a class='dropdown-item' href="/feed/?filter=following">Following</a>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button type='button' class='nav-link btn btn-link' data-toggle="modal" data-target="#newQuoteModal"><i class="bi bi-pencil-square"></i></button>
+                </li>
+                <!-- Mobile: searchbar for -->
+                
+                <div id='dogSearchBar1' class='d-lg-none'>
+                  <form id='filterDogsFeed' action="/feedsearch" method='POST'>
+                    <div class='input-group form-control d-flex autocomplete' style='border:none'>
+                      <input class='form-control' id='myInput' list='dogs' name='name' placeholder='Search doggo'>
+                      <datalist id='dogs'>
+                        <% dogs.forEach(dog => { %>
+                          <option value="<%= dog.name %>"><a href="/dogs/profile/<%= dog.id %>"></a></option>
+                        <% }) %>
+                      </datalist>
+                      <button class='btn btn-outline-secondary' type='submit'>Search</button>
+                    </div>
+                  </form>
                 </div>
-              </div>
+              </ul>
             </div>
-            <!-- New quote -->
-            <div class='col-4'>
-              <button type='button' class='btn btn-primary' data-toggle="modal" data-target="#newQuoteModal">New Quote</button>
-              <div class='modal fade' id='newQuoteModal' tab-index='-1' role='dialog' aria-hidden="true">
+            <!-- Modal for new quote form  -->
+            <div class='modal fade' id='newQuoteModal' tab-index='-1' role='dialog' aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role='document'>
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class='modal-title'>New Quote</h5>
-                      <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+                      <button type="btn" class="btn-close" data-dismiss="modal"></button>
                     </div>
                     <div class='modal-body'>
                       <form action="/quote/new" id='quoteForm' method='POST'>
@@ -67,24 +85,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-            
           </div>
           
-          <!-- Mobile: searchbar for -->
-          <div id='dogSearchBar1' class='d-lg-none'>
-            <form id='filterDogsFeed' action="/feedsearch" method='POST'>
-              <div class='form-control autocomplete' style='border:none'>
-                <input id='myInput' list='dogs' name='name' placeholder='Search doggo'>
-                <datalist id='dogs'>
-                  <% dogs.forEach(dog => { %>
-                    <option value="<%= dog.name %>"><a href="/dogs/profile/<%= dog.id %>"></a></option>
-                  <% }) %>
-                </datalist>
-                <button class='btn btn-primary' type='submit'>Search</button>
-              </div>
-            </form>
-          </div>
           <!-- quotes list -->
           <div id="quoteFeedList" class='overflow-auto feed-fix-height' data-simplebar>
             <ul style='padding-left:10px'>
@@ -114,33 +116,33 @@
         <!-- users -->
         <div class='col-lg-5 d-none d-lg-block'>
           <!-- Search bar -->
-          <div id='dogSearchBar'>
+          <div id='dogSearchBar2' class=''>
             <form id='filterDogsFeed' action="/feedsearch" method='POST'>
-              <div class='form-control autocomplete'>
-                <input id='myInput' list='dogs' name='name' placeholder='Search doggo'>
+              <div class='input-group form-control d-flex autocomplete' style='border:none'>
+                <input class='form-control' id='myInput' list='dogs' name='name' placeholder='Search doggo'>
                 <datalist id='dogs'>
                   <% dogs.forEach(dog => { %>
                     <option value="<%= dog.name %>"><a href="/dogs/profile/<%= dog.id %>"></a></option>
                   <% }) %>
                 </datalist>
-                <button class='btn btn-primary' type='submit'>Search</button>
+                <button class='btn btn-outline-secondary' type='submit'>Search</button>
               </div>
             </form>
           </div>
           <!-- List of users -->
           <div id='dogFeedList' class='overflow-auto feed-fix-height' data-simplebar>
             <% dogs.forEach(dog => { %>
-              <div class='row border py-1'>
+              <div class='row py-3'>
                 <div class="col-3 justify-content-center">
                   <div style='background: url("/<%= dog.profilepic%>");
                   background-size: cover;
                   background-position: center;' 
-                  class='image-cropper'></div>
+                  class='image-cropper zoom'></div>
                 </div>
                 <div class='col-8'>
-                  <b><a style='text-decoration: none' href="/dogs/profile/<%= dog.id %>"><%= dog.name %></a></b>
-                  <p><%= dog.about %></p>
-                  <p><%= dog.followers %> followers | <%= dog.quotes %> quotes</p>
+                  <b class='mb-1'><a style='text-decoration: none' href="/dogs/profile/<%= dog.id %>"><%= dog.name %></a></b>
+                  <p class='mb-1'><%= dog.about %></p>
+                  <p class='mb-1'><%= dog.followers %> followers | <%= dog.quotes %> quotes</p>
                 </div>
               </div>
               
