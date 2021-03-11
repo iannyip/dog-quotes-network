@@ -134,6 +134,12 @@
     justify-content: center;
     font-size: 15px;
   }
+  .payment-dog-img {
+    background-image: url("https://cdn.vox-cdn.com/thumbor/G_w4Nyo9IJx5q5xa5E92vJCVyUQ=/21x0:539x345/1200x800/filters:focal(21x0:539x345)/cdn.vox-cdn.com/assets/3727699/Dogecoin_logo.png");
+    background-size: 90%;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+  }
 }
 
 @media (min-width: 992px) {

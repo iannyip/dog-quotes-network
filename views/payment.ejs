@@ -4,15 +4,11 @@
     <%- include ('partial/header') %>
   </head>
 
-  <body class="bg-gray-900">
+  <body class="vh-100 payment-dog-img ">
     <%- include ('partial/navbar') %>
-    <nav class="bg-purple-900 h-20 flex justify-center">
-      <h1 class="text-black text-5xl">Donation App</h1>
-    </nav>
-
-    <div class="container">
+      <div class="container" style='margin-top:100px'>
       <div class='row justify-content-center'>
-        <form id='stripe-form'  action="/charge" method="POST" class="col-5">
+        <form id='stripe-form'  action="/charge" method="POST" class="col-md-6">
           <input
             class="form-control my-2"
             type="text"
