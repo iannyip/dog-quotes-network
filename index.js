@@ -244,31 +244,44 @@ app.get("/dogs/you/edit", (request, response) => {
     .then((result) => {
       const dogObj = result.rows[0];
       dogObj.date = moment(dogObj.dob).format("YYYY-MM-DD");
+      console.log("babananan", dogObj);
       response.render("dogs-you-edit", dogObj);
     })
     .catch((error) => console.log("error: ", error));
 });
 
-app.put("/dogs/you/edit", multerUpload.single("photo"), (request, response) => {
-  const formData = request.body;
-  const insertData = [
-    formData.name,
-    formData.dob,
-    formData.about,
-    formData.status,
-    request.file.filename,
-  ];
-  const { userId } = request.cookies;
-  pool
-    .query(
-      `UPDATE dogs SET (name, dob, about, status, profilepic) = ($1, $2, $3, $4, $5) WHERE id=${userId}`,
-      insertData
-    )
-    .then((result) => {
-      response.redirect("/dogs/you");
-    })
-    .catch((error) => console.log("error: ", error));
-});
+app.put(
+  "/dogs/you/edit",
+  multerUpload.single("profilepic"),
+  (request, response) => {
+    const formData = request.body;
+    console.log("kkj", request.body);
+    let fileName;
+    if (typeof request.file === "undefined") {
+      fileName = formData.profilepicBackup;
+    } else {
+      fileName = request.file.filename;
+    }
+    const { userId } = request.cookies;
+    const insertData = [
+      formData.name,
+      formData.dob,
+      formData.about,
+      formData.status || 0,
+      fileName,
+    ];
+    console.log(insertData);
+    pool
+      .query(
+        `UPDATE dogs SET (name, dob, about, status, profilepic) = ($1, $2, $3, $4, $5) WHERE id=${userId}`,
+        insertData
+      )
+      .then((result) => {
+        response.redirect("/dogs/you");
+      })
+      .catch((error) => console.log("error: ", error));
+  }
+);
 
 app.get("/help", (request, response) => {
   response.render("help");

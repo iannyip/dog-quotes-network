@@ -7,34 +7,37 @@
     <%- include ('partial/navbar') %>
     <div class='container mt-4'>
       <div class="row">
-        <div class='image-cropper'>
-          <img src="/<%=profilepic%>" alt="user profile pic">
-        </div>
-        <h1>Your profile</h1>
+        <div style='background: url("/<%= profilepic%>");
+            background-size: cover;
+            background-position: center;' 
+            class='large-image-cropper indiv-dog-sm'>
+          </div>
+        <h1 class='mt-2'>Your profile</h1>
       </div>
       <div class="row">
         <form action="/dogs/you/edit?_method=PUT" method="POST" enctype="multipart/form-data" class="mt-4">
-          <div class="form-group">
+          <div class="form-group my-4">
             <label for="name" class=""><b>Name</b></label>
             <input type="text" class="form-control" id='name' name='name' value="<%= name %>">
           </div>
-          <div class="form-group">
+          <div class="form-group my-4">
             <label for="dob" class=""><b>DOB</b></label>
             <input type="date" class="form-control" id='dob' name='dob' value="<%= date %>">
           </div>
-          <div class="form-group">
+          <div class="form-group my-4">
             <label for="about" class=""><b>About</b></label> 
             <input type="text" class="form-control" id='about' name='about' value="<%= about %>">
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group my-4">
             <label for="status" class=""><b>Status</b></label>
             <input type="text" class="form-control" id='status' name='status' value="<%= status %>">
+          </div> -->
+          <div class='form-group my-4'>
+            <label for="profilepic"><b>Profile Picture</b></label>
+            <input type="hidden" name='profilepicBackup' value='<%= profilepic%>'>
+            <input type="file" class='form-control mt-2' name='profilepic' id='profilepic'>
           </div>
-          <div class="form-group">
-            <label for="profilepic" class=""><b>Pofile Picture</b></label>
-            <input type="photo" class="form-control" id='profilepic' name='profilepic'>
-          </div>
-          <div class="form-group">
+          <div class="form-group my-4">
             <button type="submit" class="btn btn-primary">Submit</button>
             <a href="/dogs/you" class='btn btn-danger'>Cancel</a>
           </div>
