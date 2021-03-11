@@ -8,7 +8,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
   </head>
-  <body class=''>
+  <body class='main-background'>
     <%- include ('partial/navbar') %>
     <div class='container-fluid'>
       <!-- mobile: Users in top horizontal row -->
@@ -32,7 +32,7 @@
       <div class='row justify-content-around'>
         <!-- quotes -->
         <div class='col-lg-6 row'>
-          
+          <!-- Header for new quote -->
           <div class="row">
             <div class="col">
               <!-- Chio -->
@@ -67,24 +67,24 @@
             </div>
             <!-- Modal for new quote form  -->
             <div class='modal fade' id='newQuoteModal' tab-index='-1' role='dialog' aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role='document'>
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class='modal-title'>New Quote</h5>
-                      <button type="btn" class="btn-close" data-dismiss="modal"></button>
-                    </div>
-                    <div class='modal-body'>
-                      <form action="/quote/new" id='quoteForm' method='POST'>
-                        <textarea name="quote" id="quote" class="form-control" rows="5" placeholder='Why waste time say lot word when few word do trick'></textarea>
-                      </form>
-                    </div>
-                    <div class='modal-footer'>
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button type="submit" form='quoteForm' class="btn btn-primary">Post</button>
-                    </div>
+              <div class="modal-dialog modal-dialog-centered" role='document'>
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class='modal-title'>New Quote</h5>
+                    <button type="btn" class="btn-close" data-dismiss="modal"></button>
+                  </div>
+                  <div class='modal-body'>
+                    <form action="/quote/new" id='quoteForm' method='POST'>
+                      <textarea name="quote" id="quote" class="form-control" rows="5" placeholder='Why waste time say lot word when few word do trick'></textarea>
+                    </form>
+                  </div>
+                  <div class='modal-footer'>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" form='quoteForm' class="btn btn-primary">Post</button>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
           
           <!-- quotes list -->
