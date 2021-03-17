@@ -35,7 +35,7 @@ export default function initDogsController(app, pool) {
       .then((result) => {
         userData.info.followers = result.rows[0].count;
         console.log(userData);
-        response.render("dogs-you", userData);
+        response.render("./dogs/dogs-you", userData);
       })
       .catch((error) => console.log("error: ", error));
   }
@@ -81,7 +81,7 @@ export default function initDogsController(app, pool) {
       .then((result) => {
         userData.info.following = result.rows[0].count;
         console.log(userData);
-        response.render("dog-single", userData);
+        response.render("./dogs/dog-single", userData);
       })
       .catch((error) => console.log("error: ", error));
   }
@@ -94,7 +94,7 @@ export default function initDogsController(app, pool) {
         const dogObj = result.rows[0];
         dogObj.date = moment(dogObj.dob).format("YYYY-MM-DD");
         console.log("babananan", dogObj);
-        response.render("dogs-you-edit", dogObj);
+        response.render("./dogs/dogs-you-edit", dogObj);
       })
       .catch((error) => console.log("error: ", error));
   }
@@ -133,7 +133,7 @@ export default function initDogsController(app, pool) {
       .then((result) => {
         const info = result.rows[0];
         console.log(info);
-        response.render("payment", { info });
+        response.render("./dogs/payment", { info });
       })
       .catch((error) => console.log(error));
   }
@@ -163,7 +163,7 @@ export default function initDogsController(app, pool) {
             )}`
           );
         })
-        .then(() => res.render("payment_complete"))
+        .then(() => res.render("./dogs/payment_complete"))
         .catch((err) => console.log("banana", err));
     } catch (err) {
       res.send(err);

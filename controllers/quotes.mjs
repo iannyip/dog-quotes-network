@@ -19,7 +19,7 @@ export default function initQuotesController(app, pool) {
     pool
       .query(`SELECT * FROM quotes WHERE id=${id}`)
       .then((result) => {
-        response.render("quote-edit", result.rows[0]);
+        response.render("./quotes/quote-edit", result.rows[0]);
       })
       .catch((error) => console.log(error));
   }

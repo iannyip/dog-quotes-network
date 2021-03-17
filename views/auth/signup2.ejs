@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <%- include ('partial/header') %>
+    <%- include ('../partial/header') %>
   </head>
   <body class='vh-100 login-background'>
-    <%- include ('partial/navbar-login') %>
+    <%- include ('../partial/navbar-login') %>
     <div class='container mt-4'>
       <div class='row justify-content-center'>
         <div class='col-md-6'>
           <ul class='signup-progress-bar'>
             <li class='active'>username</li>
             <li class='active'>Info</li>
-            <li class='active'>Profile Picture</li>
+            <li>Profile Picture</li>
           </ul>
         </div>
       </div>
       <div class='row justify-content-center'>
         <div class='col-md-6'>
-          <form action="/signup/3" method='POST' enctype="multipart/form-data">
+          <form action="/signup/2" method="POST">
             <div class='form-group my-4'>
-              <label for="profilepic">Profile Picture</label>
-              <input type="file" class='form-control mt-2' name='profilepic' id='profilepic'>
+              <label for="about">Tell us about yourself</label>
+              <input type="text" class='form-control mt-2' name='about' id='about' placeholder='I like scooby snacks'>
+            </div>
+            <div class='form-group my-4'>
+              <label for="dob">Birthday</label>
+              <input type="date" class='form-control mt-2' name='dob' id='dob'>
             </div>
             <input type="hidden" name='name' value='<%= name %>'>
             <input type="hidden" name='password' value='<%= password %>'>
-            <input type="hidden" name='about' value='<%= about %>'>
-            <input type="hidden" name='dob' value='<%= dob %>'>
-            <button type='submit' class='btn btn-primary'>Create Account</button>
+            <button type="submit" class='btn btn-primary'>Next step</button>
           </form>
         </div>
       </div>
     </div>
+
+    <%- include ('../partial/requiredjs') %>
+
   </body>
 </html>

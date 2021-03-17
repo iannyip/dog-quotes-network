@@ -45,13 +45,13 @@ export default function initFeedController(app, pool) {
       })
       .then((result) => {
         feed.dogs = result.rows;
-        response.render("feed", feed);
+        response.render("feeds/feed", feed);
       })
       .catch((error) => console.log(error.stack));
   }
 
   const getHelp =  (request, response) => {
-    response.render("help");
+    response.render("feeds/help");
   }
 
   const search =(request, response) => {

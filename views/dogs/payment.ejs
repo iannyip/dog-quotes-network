@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include ('partial/header') %>
+    <%- include ('../partial/header') %>
   </head>
 
   <body class="vh-100 payment-dog-img ">
-    <%- include ('partial/navbar') %>
+    <%- include ('../partial/navbar') %>
       <div class="container" style='margin-top:100px'>
       <div class='row justify-content-center'>
         <form id='stripe-form'  action="/charge" method="POST" class="col-md-6">
@@ -42,7 +42,7 @@
   </body>
 
   <!-- Javascript -->
-  <%- include ('partial/requiredjs') %>
+  <%- include ('../partial/requiredjs') %>
   <script src="https://js.stripe.com/v3/"></script>
   <script src="card.js"></script>
 </html>

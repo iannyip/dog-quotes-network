@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <%- include ('partial/header') %>
+    <%- include ('../partial/header') %>
   </head>
   <body>
-    <%- include ('partial/navbar') %>
+    <%- include ('../partial/navbar') %>
     <div class='container mt-4'>
       <h1>Edit quote</h1>
       <form action="/quote/<%= id %>/edit?_method=PUT" method="POST">
@@ -18,7 +18,7 @@
       </form>
     </div>
 
-    <%- include ('partial/requiredjs') %>
+    <%- include ('../partial/requiredjs') %>
 
   </body>
 </html>

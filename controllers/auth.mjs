@@ -17,7 +17,7 @@ const setHash = (input, type) => {
 
 export default function initAuthController(app, pool) {
   const showLogin = (request, response) => {
-    response.render("login");
+    response.render("./auth/login");
   }
 
   const createLogin = (request, response) => {
@@ -49,7 +49,7 @@ export default function initAuthController(app, pool) {
   }
 
   const showSignup1 = (request, response) => {
-    response.render("signup1");
+    response.render("./auth/signup1");
   }
 
   const createSignup1 = (request, response) => {
@@ -59,13 +59,13 @@ export default function initAuthController(app, pool) {
       "password"
     );
     console.log(newUserDataPartial);
-    response.render("signup2", newUserDataPartial);
+    response.render("./auth/signup2", newUserDataPartial);
   }
 
   const createSignup2 = (request, response) => {
     const newUserDataPartial = request.body;
     console.log(newUserDataPartial);
-    response.render("signup3", newUserDataPartial);
+    response.render("./auth/signup3", newUserDataPartial);
   }
 
   const createSignup3 = (request, response) => {

@@ -26,7 +26,7 @@ export default function initTransactionsController(app, pool) {
       .then((result) => {
         quoteInfo.transactions = result.rows;
         console.log(quoteInfo);
-        response.render("quote-single", quoteInfo);
+        response.render("./transactions/quote-single", quoteInfo);
       })
       .catch((error) => console.log(error.stack));
   }

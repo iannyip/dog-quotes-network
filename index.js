@@ -3,15 +3,10 @@ import express from "express";
 import pg from "pg";
 import cookieParser from "cookie-parser";
 import methodOverride from "method-override";
-import multer from "multer";
-import bodyParser from "body-parser";
-import jsSHA from "jssha";
 import bindRoutes from "./routes.mjs";
 
 // For deployment
 const PORT = process.argv[2] || 3004;
-const SALT = process.env.salt || "keep barking";
-
 
 // Set up
 const { Pool } = pg;
