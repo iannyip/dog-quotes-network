@@ -1,4 +1,10 @@
+import Stripe from "stripe";
 import moment from "moment";
+const secretKey =
+  process.env.stripeSecretKey ||
+  "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
+
+const stripe = new Stripe(secretKey);
 
 export default function initDogsController(app, pool) {
   const you = (request, response) => {
@@ -120,11 +126,57 @@ export default function initDogsController(app, pool) {
       .catch((error) => console.log("error: ", error));
   }
 
+  const showStripe = (request, response) => {
+    const { userId } = request.cookies;
+    pool
+      .query(`SELECT * FROM dogs WHERE id=${userId}`)
+      .then((result) => {
+        const info = result.rows[0];
+        console.log(info);
+        response.render("payment", { info });
+      })
+      .catch((error) => console.log(error));
+  }
+
+  const updateStripe = (req, res) => {
+    req.body;
+    console.log(req.body);
+    try {
+      stripe.customers
+        .create({
+          name: req.body.name,
+          email: req.body.email,
+          source: req.body.stripeToken,
+        })
+        .then((customer) =>
+          stripe.charges.create({
+            amount: req.body.amount * 100,
+            currency: "sgd",
+            customer: customer.id,
+          })
+        )
+        .then(() => {
+          const updatedBank = Number(req.body.bank) + Number(req.body.amount);
+          return pool.query(
+            `UPDATE dogs SET bank = ${updatedBank} WHERE id=${Number(
+              req.body.id
+            )}`
+          );
+        })
+        .then(() => res.render("payment_complete"))
+        .catch((err) => console.log("banana", err));
+    } catch (err) {
+      res.send(err);
+    }
+  }
+
   return {
     you,
     show,
     editYou, 
-    updateYou
+    updateYou,
+    showStripe,
+    updateStripe
   }
 
 }
