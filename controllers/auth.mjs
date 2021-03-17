@@ -20,20 +20,16 @@ export default function initAuthController(app, pool) {
     response.render("./auth/login");
   }
 
-  const createLogin = (request, response) => {
-    const loginDetails = request.body;
-    // Hash password
-    const hashedPassword = setHash(loginDetails.password, "password");
-
-    pool
-      .query(`SELECT * FROM dogs WHERE name='${loginDetails.name}'`)
-      .then((result) => {
-        // CONTINUE LOGIN VERIFICATION
-        if (result.rows.length === 0) {
+  const createLogin = async (request, response) => {
+    try {
+      const loginDetails = request.body;  
+      const hashedPassword = setHash(loginDetails.password, "password");
+      const dogToVerify = await pool.query(`SELECT * FROM dogs WHERE name='${loginDetails.name}'`);
+      if (dogToVerify.rows.length === 0) {
           response.redirect("/login");
           return;
         } else {
-          const user = result.rows[0];
+          const user = dogToVerify.rows[0];
           if (user.password === hashedPassword) {
             const hashedCookie = setHash(user.id, "session");
             response.cookie("session", hashedCookie);
@@ -44,8 +40,9 @@ export default function initAuthController(app, pool) {
             return;
           }
         }
-      })
-      .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const showSignup1 = (request, response) => {
@@ -58,44 +55,34 @@ export default function initAuthController(app, pool) {
       newUserDataPartial.password,
       "password"
     );
-    console.log(newUserDataPartial);
     response.render("./auth/signup2", newUserDataPartial);
   }
 
   const createSignup2 = (request, response) => {
     const newUserDataPartial = request.body;
-    console.log(newUserDataPartial);
     response.render("./auth/signup3", newUserDataPartial);
   }
 
-  const createSignup3 = (request, response) => {
-    const newUserData = request.body;
-    const inputNewUser = [
-      newUserData.name,
-      newUserData.password,
-      newUserData.dob,
-      newUserData.about,
-      request.file.filename,
-    ];
-    pool
-      .query(
-        `INSERT INTO dogs (name, password, dob, about, status, bank, profilepic) VALUES ($1, $2, $3, $4, 1, 0, $5)`,
-        inputNewUser
-      )
-      .then((result) => {
-        const queryUserArr = [newUserData.name, newUserData.password];
-        return pool.query(
-          `SELECT * FROM dogs WHERE (name=$1 AND password=$2)`,
-          queryUserArr
-        );
-      })
-      .then((result) => {
-        const newUserId = result.rows[0].id;
-        response.cookie("session", setHash(newUserId, "session"));
-        response.cookie("userId", newUserId);
-        response.redirect("/feed");
-      })
-      .catch((error) => console.log(error));
+  const createSignup3 = async (request, response) => {
+    try {
+      const newUserData = request.body;
+      const inputNewUser = [
+        newUserData.name,
+        newUserData.password,
+        newUserData.dob,
+        newUserData.about,
+        request.file.filename,
+      ];
+      await pool.query(`INSERT INTO dogs (name, password, dob, about, status, bank, profilepic) VALUES ($1, $2, $3, $4, 1, 0, $5)`,inputNewUser);
+      const queryUserArr = [newUserData.name, newUserData.password];
+      const createdDog = await pool.query(`SELECT * FROM dogs WHERE (name=$1 AND password=$2)`,queryUserArr);
+      const newUserId = createdDog.rows[0].id;
+      response.cookie("session", setHash(newUserId, "session"));
+      response.cookie("userId", newUserId);
+      response.redirect("/feed");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const logout = (request, response) => {
