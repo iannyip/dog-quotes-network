@@ -40,7 +40,7 @@ export default function initTransactionModel(sequelize, DataTypes) {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-      }
+      },
     },
     {
       underscored: true,

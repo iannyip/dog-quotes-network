@@ -37,7 +37,7 @@ export default function initDogModel(sequelize, DataTypes) {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-      }
+      },
     },
     {
       underscored: true,
