@@ -39,10 +39,12 @@ export default function initTransactionsController(app, pool) {
       newTrxn.payee_id,
       newTrxn.quote_id,
       newTrxn.amount,
+      new Date(),
+      new Date()
     ];
     pool
       .query(
-        `INSERT INTO transactions (payer_id, payee_id, quote_id, amount) VALUES ($1, $2, $3, $4)`,
+        `INSERT INTO transactions (payer_id, payee_id, quote_id, amount, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`,
         inputData
       )
       .then(() => {

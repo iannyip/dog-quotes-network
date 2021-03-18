@@ -72,8 +72,10 @@ export default function initAuthController(app, pool) {
         newUserData.dob,
         newUserData.about,
         request.file.filename,
+        new Date(),
+        new Date(),
       ];
-      await pool.query(`INSERT INTO dogs (name, password, dob, about, status, bank, profilepic) VALUES ($1, $2, $3, $4, 1, 0, $5)`,inputNewUser);
+      await pool.query(`INSERT INTO dogs (name, password, dob, about, status, bank, profilepic, created_at, updated_at) VALUES ($1, $2, $3, $4, 1, 0, $5, $6, $7)`,inputNewUser);
       const queryUserArr = [newUserData.name, newUserData.password];
       const createdDog = await pool.query(`SELECT * FROM dogs WHERE (name=$1 AND password=$2)`,queryUserArr);
       const newUserId = createdDog.rows[0].id;

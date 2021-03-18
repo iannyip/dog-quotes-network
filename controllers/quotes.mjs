@@ -1,17 +1,17 @@
 // db is an argument to this function so
 // that we can make db queries inside
 export default function initQuotesController(app, pool) {
-  const create = (request, response) => {
-    const newQuoteData = request.body;
-    const { userId } = request.cookies;
-    pool
-      .query(
-        `INSERT INTO quotes (quote, quoter_id) VALUES ('${
-          newQuoteData.quote
-        }', ${Number(userId)})`
-      )
-      .then((result) => response.redirect("/feed"))
-      .catch((error) => console.log(error));
+  const create = async (request, response) => {
+
+    try{
+      const { userId } = request.cookies;
+      const newQuoteData = [request.body.quote, userId, new Date(), new Date()]
+      console.log(newQuoteData);
+      await pool.query(`INSERT INTO quotes (quote, quoter_id, created_at, updated_at) VALUES ($1, $2, $3, $4)`, newQuoteData);
+      response.redirect("/feed")
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const showEdit = (request, response) => {

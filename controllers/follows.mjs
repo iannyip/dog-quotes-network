@@ -2,8 +2,9 @@ export default function initFollowsController(app, pool) {
 
   const create = async (request, response) => {
     try{
-      const newRelationArr = [request.cookies.userId, request.body.followed];
-      await pool.query(`INSERT INTO follows (follower_id, followed_id) VALUES ($1, $2)`, newRelationArr)
+      const newRelationArr = [request.cookies.userId, request.body.followed, new Date(), new Date()];
+      console.log(newRelationArr);
+      await pool.query(`INSERT INTO follows (follower_id, followed_id, created_at, updated_at) VALUES ($1, $2, $3, $4)`, newRelationArr)
       response.redirect(`/dogs/profile/${newRelationArr[1]}`);
     } catch (error) {
       console.log(error);

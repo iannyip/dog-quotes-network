@@ -16,14 +16,14 @@ if (process.env.ENV === "PRODUCTION") {
     user: "postgres",
     password: process.env.DB_password,
     host: "localhost",
-    database: "doggos",
+    database: "doggos_development",
     port: 5432,
   };
 } else {
   pgConnectionConfig = {
     user: "iannyip",
     host: "localhost",
-    database: "doggos",
+    database: "doggos_development",
     port: 5432,
   };
 }
