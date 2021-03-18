@@ -1,7 +1,7 @@
-// This is the model for the dog table
-export default function initDogModel(sequelize, DataTypes) {
+// This is the model for the transactions table
+export default function initFollowModel(sequelize, DataTypes) {
   return sequelize.define(
-    'dog',
+    'follow',
     {
       id: {
         allowNull: false,
@@ -9,26 +9,19 @@ export default function initDogModel(sequelize, DataTypes) {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      name: {
-        type: DataTypes.STRING,
-      }, 
-      password: {
-        type: DataTypes.STRING,
-      }, 
-      dob: {
-        type: DataTypes.DATE,
-      }, 
-      about: {
-        type: DataTypes.STRING,
-      }, 
-      status: {
+      followerId: {
         type: DataTypes.INTEGER,
+        references: {
+          model: 'dogs',
+          key: 'id',
+        }
       }, 
-      bank: {
+      followedId: {
         type: DataTypes.INTEGER,
-      }, 
-      profilepic: {
-        type: DataTypes.STRING,
+        references: {
+          model: 'dogs',
+          key: 'id',
+        }
       }, 
       createdAt: {
         allowNull: false,

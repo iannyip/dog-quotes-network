@@ -1,7 +1,7 @@
-// This is the model for the dog table
-export default function initDogModel(sequelize, DataTypes) {
+// This is the model for the quotes table
+export default function initQuoteModel(sequelize, DataTypes) {
   return sequelize.define(
-    'dog',
+    'quote',
     {
       id: {
         allowNull: false,
@@ -9,26 +9,15 @@ export default function initDogModel(sequelize, DataTypes) {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      name: {
+      quote: {
         type: DataTypes.STRING,
       }, 
-      password: {
+      quoterId: {
         type: DataTypes.STRING,
-      }, 
-      dob: {
-        type: DataTypes.DATE,
-      }, 
-      about: {
-        type: DataTypes.STRING,
-      }, 
-      status: {
-        type: DataTypes.INTEGER,
-      }, 
-      bank: {
-        type: DataTypes.INTEGER,
-      }, 
-      profilepic: {
-        type: DataTypes.STRING,
+        references: {
+          model: 'dogs',
+          key: 'id',
+        }
       }, 
       createdAt: {
         allowNull: false,

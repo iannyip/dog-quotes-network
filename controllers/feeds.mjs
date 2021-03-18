@@ -90,7 +90,6 @@ export default function initFeedController(app, pool) {
     }
 }
 
-
   return {
     index,
     getHelp,
