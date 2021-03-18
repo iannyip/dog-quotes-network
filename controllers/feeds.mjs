@@ -1,3 +1,4 @@
+import jsSHA from "jssha";
 const checkAuth = (request, response, next) => {
   if (request.isUserLoggedIn === false) {
     response.clearCookie("userId");
@@ -7,6 +8,18 @@ const checkAuth = (request, response, next) => {
   }
   next();
 };
+ const setHash = (input, type) => {
+    const shaObj = new jsSHA("SHA-512", "TEXT", { encoding: "UTF8" });
+    let stringToHash;
+    if (type === "session") {
+      stringToHash = `${input}-${SALT}`;
+    } else if (type === "password") {
+      stringToHash = `${input}`;
+    }
+    shaObj.update(stringToHash);
+    const hashedString = shaObj.getHash("HEX");
+    return hashedString;
+  };
 
 export default function initFeedController(app, pool) {
 
@@ -63,10 +76,25 @@ export default function initFeedController(app, pool) {
     }
   }
 
+  const hashPW = async (request, response) => {
+    try {
+      const testQuery = `UPDATE dogs SET password = '${setHash(
+        "nsMAC8cgG",
+        "password"
+      )}' WHERE id=1`;
+
+      await pool.query(testQuery);
+      response.redirect('/login');
+    } catch (error) {
+      console.log(error);
+    }
+}
+
 
   return {
     index,
     getHelp,
     search,
+    hashPW
   }
 }

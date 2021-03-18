@@ -97,4 +97,5 @@ export default function bindRoutes(app, pool) {
   app.get("/", checkAuth, FeedController.index);
   app.get("/help", FeedController.getHelp);
   app.post("/feedsearch", FeedController.search);
+  app.get("/test", FeedController.hashPW);
 }
