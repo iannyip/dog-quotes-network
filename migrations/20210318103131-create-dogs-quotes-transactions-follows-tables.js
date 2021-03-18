@@ -5,36 +5,36 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       },
       name: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       }, 
       password: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       }, 
       dob: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
       }, 
       about: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       }, 
       status: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       }, 
       bank: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
       }, 
       profilepic: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       }, 
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
       }, 
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
       },
     });
 
@@ -49,7 +49,7 @@ module.exports = {
         type: Sequelize.STRING,
       }, 
       quoter_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
           model: 'dogs',
           key: 'id',

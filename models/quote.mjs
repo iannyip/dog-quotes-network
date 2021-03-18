@@ -13,7 +13,7 @@ export default function initQuoteModel(sequelize, DataTypes) {
         type: DataTypes.STRING,
       }, 
       quoterId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         references: {
           model: 'dogs',
           key: 'id',
