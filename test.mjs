@@ -141,3 +141,5 @@ const sequelize_getDog = async () => {
 // sequelize_findOne();
 // sequelize_get();
 sequelize_getDog();
+
+// test msg
