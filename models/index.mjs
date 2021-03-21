@@ -26,14 +26,17 @@ db.Transaction = initTransactionModel(sequelize, Sequelize.DataTypes);
 db.Follow = initFollowModel(sequelize, Sequelize.DataTypes);
 
 // One to many relationships
-db.Dog.hasMany(db.Quote);
-db.Quote.belongsTo(db.Dog);
+db.Dog.hasMany(db.Quote, { foreignKey: 'quoterId'});
+// db.Quote.belongsTo(db.Dog, { foreignKey: 'quoterId'});
+// Sequelize assumes that the FK in Quotes is dog_id
+// If we want to getDog(), we need to have db.Quote.belongsTo
+// If we want to getQuote(), we need to have db.Dog.hasMany
 
-db.Quote.hasMany(db.Transaction);
-db.Transaction.belongsTo(db.Quote);
+// db.Quote.hasMany(db.Transaction);
+// db.Transaction.belongsTo(db.Quote);
 
-db.Dog.hasMany(db.Transaction);
-db.Transaction.belongsTo(db.Dog);
+// db.Dog.hasMany(db.Transaction);
+// db.Transaction.belongsTo(db.Dog);
     // There are actually two links (payer_id and payee_id)
 
 db.sequelize = sequelize;
