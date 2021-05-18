@@ -10,7 +10,7 @@ import Stripe from "stripe";
 import jsSHA from "jssha";
 
 // For deployment
-const PORT = process.argv[2] || 3004;
+const PORT = process.env.PORT || process.argv[2] || 3004;
 const SALT = process.env.salt || "keep barking";
 const secretKey =
   process.env.stripeSecretKey ||
