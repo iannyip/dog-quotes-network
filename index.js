@@ -19,7 +19,14 @@ const secretKey =
 // Set up
 const { Pool } = pg;
 let pgConnectionConfig;
-if (process.env.ENV === "PRODUCTION") {
+if (process.env.DATABASE_URL){
+  pgConnectionConfigs = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  };
+} else if (process.env.ENV === "PRODUCTION") {
   pgConnectionConfig = {
     user: "postgres",
     password: process.env.DB_password,
