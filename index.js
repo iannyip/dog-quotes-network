@@ -20,7 +20,7 @@ const secretKey =
 const { Pool } = pg;
 let pgConnectionConfig;
 if (process.env.DATABASE_URL){
-  pgConnectionConfigs = {
+  pgConnectionConfig = {
     connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
