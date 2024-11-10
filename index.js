@@ -20,20 +20,24 @@ const secretKey =
 const { Pool } = pg;
 let pgConnectionConfig;
 if (process.env.DATABASE_URL) {
+  console.log('using DATABASE_URL config to setup DB');
   pgConnectionConfig = {
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
   };
 } else if (process.env.ENV === 'PRODUCTION') {
+  console.log('using PRODUCTION config to setup DB');
   pgConnectionConfig = {
-    user: process.env.DB_user || 'postgres',
-    password: process.env.DB_password,
-    host: 'localhost',
-    database: 'doggos',
-    port: process.env.PORT || 5432,
+    connectionString: process.env.DATABASE_URL,
+    // user: process.env.DB_user || 'postgres',
+    // password: process.env.DB_password,
+    // host: 'localhost',
+    // database: 'doggos',
+    // port: process.env.PORT || 5432,
     ssl: { rejectUnauthorized: false },
   };
 } else {
+  console.log('using manually defined config to setup DB');
   pgConnectionConfig = {
     user: 'ianyip',
     host: 'localhost',
