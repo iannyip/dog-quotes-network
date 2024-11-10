@@ -63,3 +63,12 @@ Login with a test account:
 username: Yettie
 password: nsMAC8cgG
 ```
+
+## Deployment
+This has been deployed on render as https://dog-quotes-network.onrender.com 
+
+Setup notes:
+- Free tier; DB expires 10 Dec 2024
+- Setup postgres service: run in terminal `psql <External Database URL> -f init.sql` to setup DB
+- Setup web service: add environment variables (`salt`, `ENV`, `DATABASE_URL`)
+<img width="1701" alt="image" src="https://github.com/user-attachments/assets/1e8d14c4-fac3-4a6f-8cc8-aa94f2f28ba1">
