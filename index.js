@@ -1,80 +1,80 @@
 // import packages
-import express from "express";
-import pg from "pg";
-import cookieParser from "cookie-parser";
-import methodOverride from "method-override";
-import moment from "moment";
-import multer from "multer";
-import bodyParser from "body-parser";
-import Stripe from "stripe";
-import jsSHA from "jssha";
+import express from 'express';
+import pg from 'pg';
+import cookieParser from 'cookie-parser';
+import methodOverride from 'method-override';
+import moment from 'moment';
+import multer from 'multer';
+import bodyParser from 'body-parser';
+import Stripe from 'stripe';
+import jsSHA from 'jssha';
 
 // For deployment
 const PORT = process.env.PORT || process.argv[2] || 3004;
-const SALT = process.env.salt || "keep barking";
+const SALT = process.env.salt || 'keep barking';
 const secretKey =
   process.env.stripeSecretKey ||
-  "sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m";
+  'sk_test_51IQmfABPFi6NInic4SBRmmZ4xQAteIMH2KYXLcQlzahlnxO1N3Z0mB8VxfpSOPKzd8It2xFVZQ8CnKosRYa6hdDT003c930J8m';
 
 // Set up
 const { Pool } = pg;
 let pgConnectionConfig;
-if (process.env.DATABASE_URL){
+if (process.env.DATABASE_URL) {
   pgConnectionConfig = {
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }
+    ssl: { rejectUnauthorized: false },
   };
-} else if (process.env.ENV === "PRODUCTION") {
+} else if (process.env.ENV === 'PRODUCTION') {
   pgConnectionConfig = {
-    user: "postgres",
+    user: process.env.DB_user || 'postgres',
     password: process.env.DB_password,
-    host: "localhost",
-    database: "doggos",
+    host: 'localhost',
+    database: 'doggos',
     port: process.env.PORT || 5432,
+    ssl: { rejectUnauthorized: false },
   };
 } else {
   pgConnectionConfig = {
-    user: "iannyip",
-    host: "localhost",
-    database: "doggos",
-    port:  process.env.PORT || 5432,
+    user: 'ianyip',
+    host: 'localhost',
+    database: 'doggos',
+    port: process.env.PORT || 5432,
+    ssl: { rejectUnauthorized: false },
   };
 }
 
 const pool = new Pool(pgConnectionConfig);
 const app = express();
-const multerUpload = multer({ dest: "profile_pictures/" });
+const multerUpload = multer({ dest: 'profile_pictures/' });
 const stripe = new Stripe(secretKey);
 
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-app.use(methodOverride("_method"));
-app.use(express.static("public"));
-app.use("/public", express.static("public")); // Retrieve static files from `public`.
-app.use(express.static("profile_pictures"));
+app.use(methodOverride('_method'));
+app.use(express.static('public'));
+app.use('/public', express.static('public')); // Retrieve static files from `public`.
+app.use(express.static('profile_pictures'));
 
 // Helper functions
 const setHash = (input, type) => {
-  const shaObj = new jsSHA("SHA-512", "TEXT", { encoding: "UTF8" });
+  const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
   let stringToHash;
-  if (type === "session") {
+  if (type === 'session') {
     stringToHash = `${input}-${SALT}`;
-  } else if (type === "password") {
+  } else if (type === 'password') {
     stringToHash = `${input}`;
   }
   shaObj.update(stringToHash);
-  const hashedString = shaObj.getHash("HEX");
+  const hashedString = shaObj.getHash('HEX');
   return hashedString;
 };
 
 const checkAuth = (request, response, next) => {
   if (request.isUserLoggedIn === false) {
-    response.clearCookie("userId");
-    response.clearCookie("session");
-    response.redirect("/login");
+    response.clearCookie('userId');
+    response.clearCookie('session');
+    response.redirect('/login');
     return;
   }
   next();
@@ -87,7 +87,7 @@ app.use((request, response, next) => {
   // check to see if the cookies you need exists
   if (request.cookies.session && request.cookies.userId) {
     // get the hased value that should be inside the cookie
-    const hash = setHash(request.cookies.userId, "session");
+    const hash = setHash(request.cookies.userId, 'session');
 
     // test the value of the cookie
     if (request.cookies.session === hash) {
@@ -100,26 +100,26 @@ app.use((request, response, next) => {
 });
 
 // Create routes
-app.get("/", checkAuth, (request, response) => {
-  response.redirect("/feed");
+app.get('/', checkAuth, (request, response) => {
+  response.redirect('/feed');
 });
 
-app.get("/quotes", (request, response) => {
+app.get('/quotes', (request, response) => {
   pool
     .query(`SELECT * FROM quotes`)
     .then((result) => {
       const allQuotes = result.rows;
-      response.render("quotes", { allQuotes });
+      response.render('quotes', { allQuotes });
     })
-    .catch((error) => console.log("error: ", error.stack));
+    .catch((error) => console.log('error: ', error.stack));
 });
 
-app.get("/quote/new", (request, response) => {
+app.get('/quote/new', (request, response) => {
   const { userId } = request.cookies;
-  response.render("quote-new", { userId });
+  response.render('quote-new', { userId });
 });
 
-app.post("/quote/new", (request, response) => {
+app.post('/quote/new', (request, response) => {
   const newQuoteData = request.body;
   const { userId } = request.cookies;
   pool
@@ -128,53 +128,53 @@ app.post("/quote/new", (request, response) => {
         newQuoteData.quote
       }', ${Number(userId)})`
     )
-    .then((result) => response.redirect("/feed"))
+    .then((result) => response.redirect('/feed'))
     .catch((error) => console.log(error));
 });
 
-app.get("/quote/:id/edit", (request, response) => {
+app.get('/quote/:id/edit', (request, response) => {
   const { id } = request.params;
   pool
     .query(`SELECT * FROM quotes WHERE id=${id}`)
     .then((result) => {
-      response.render("quote-edit", result.rows[0]);
+      response.render('quote-edit', result.rows[0]);
     })
     .catch((error) => console.log(error));
 });
 
-app.put("/quote/:id/edit", (request, response) => {
+app.put('/quote/:id/edit', (request, response) => {
   const { id } = request.params;
   pool
     .query(`UPDATE quotes SET quote='${request.body.quote}' WHERE id=${id}`)
-    .then((result) => response.redirect("/dogs/you"))
+    .then((result) => response.redirect('/dogs/you'))
     .catch((error) => console.log(error));
 });
 
-app.delete("/quote/:id/delete", (request, response) => {
+app.delete('/quote/:id/delete', (request, response) => {
   const { id } = request.params;
   pool
     .query(`DELETE FROM quotes WHERE id=${id}`)
-    .then((result) => response.redirect("/dogs/you"))
+    .then((result) => response.redirect('/dogs/you'))
     .catch((error) => console.log(error));
 });
 
-app.get("/dogs", (request, response) => {
-  pool.query("SELECT * FROM dogs", (error, result) => {
+app.get('/dogs', (request, response) => {
+  pool.query('SELECT * FROM dogs', (error, result) => {
     const allDogs = result.rows;
-    response.render("dogs", { allDogs });
+    response.render('dogs', { allDogs });
   });
 });
 
-app.get("/dogs/profile/:id", (request, response) => {
+app.get('/dogs/profile/:id', (request, response) => {
   const { id } = request.params;
   const { userId } = request.cookies;
-  console.log("user id from cookie: ", userId);
+  console.log('user id from cookie: ', userId);
   const userData = {};
   pool
     .query(`SELECT * FROM dogs WHERE id=${id}`)
     .then((result) => {
       userData.info = result.rows[0];
-      userData.info.dob = moment(userData.info.dob).format("D MMM YYYY");
+      userData.info.dob = moment(userData.info.dob).format('D MMM YYYY');
       return pool.query(`SELECT * FROM quotes WHERE quoter_id=${id}`);
     })
     .then((result) => {
@@ -206,19 +206,19 @@ app.get("/dogs/profile/:id", (request, response) => {
     .then((result) => {
       userData.info.following = result.rows[0].count;
       console.log(userData);
-      response.render("dog-single", userData);
+      response.render('dog-single', userData);
     })
-    .catch((error) => console.log("error: ", error));
+    .catch((error) => console.log('error: ', error));
 });
 
-app.get("/dogs/you", (request, response) => {
+app.get('/dogs/you', (request, response) => {
   const { userId } = request.cookies;
   const userData = {};
   pool
     .query(`SELECT * FROM dogs WHERE id=${userId}`)
     .then((result) => {
       userData.info = result.rows[0];
-      userData.info.dob = moment(userData.info.dob).format("D MMM YYYY");
+      userData.info.dob = moment(userData.info.dob).format('D MMM YYYY');
       return pool.query(`SELECT * FROM quotes WHERE quoter_id=${userId}`);
     })
     .then((result) => {
@@ -239,32 +239,32 @@ app.get("/dogs/you", (request, response) => {
     .then((result) => {
       userData.info.followers = result.rows[0].count;
       console.log(userData);
-      response.render("dogs-you", userData);
+      response.render('dogs-you', userData);
     })
-    .catch((error) => console.log("error: ", error));
+    .catch((error) => console.log('error: ', error));
 });
 
-app.get("/dogs/you/edit", (request, response) => {
+app.get('/dogs/you/edit', (request, response) => {
   const { userId } = request.cookies;
   pool
     .query(`SELECT * FROM dogs WHERE id=${userId}`)
     .then((result) => {
       const dogObj = result.rows[0];
-      dogObj.date = moment(dogObj.dob).format("YYYY-MM-DD");
-      console.log("babananan", dogObj);
-      response.render("dogs-you-edit", dogObj);
+      dogObj.date = moment(dogObj.dob).format('YYYY-MM-DD');
+      console.log('babananan', dogObj);
+      response.render('dogs-you-edit', dogObj);
     })
-    .catch((error) => console.log("error: ", error));
+    .catch((error) => console.log('error: ', error));
 });
 
 app.put(
-  "/dogs/you/edit",
-  multerUpload.single("profilepic"),
+  '/dogs/you/edit',
+  multerUpload.single('profilepic'),
   (request, response) => {
     const formData = request.body;
-    console.log("kkj", request.body);
+    console.log('kkj', request.body);
     let fileName;
-    if (typeof request.file === "undefined") {
+    if (typeof request.file === 'undefined') {
       fileName = formData.profilepicBackup;
     } else {
       fileName = request.file.filename;
@@ -284,41 +284,42 @@ app.put(
         insertData
       )
       .then((result) => {
-        response.redirect("/dogs/you");
+        response.redirect('/dogs/you');
       })
-      .catch((error) => console.log("error: ", error));
+      .catch((error) => console.log('error: ', error));
   }
 );
 
-app.get("/help", (request, response) => {
-  response.render("help");
+app.get('/help', (request, response) => {
+  response.render('help');
 });
 
-app.get("/login", (request, response) => {
-  response.render("login");
+app.get('/login', (request, response) => {
+  response.render('login');
 });
 
-app.post("/login", (request, response) => {
+app.post('/login', (request, response) => {
   const loginDetails = request.body;
   // Hash password
-  const hashedPassword = setHash(loginDetails.password, "password");
+  const hashedPassword = setHash(loginDetails.password, 'password');
 
   pool
     .query(`SELECT * FROM dogs WHERE name='${loginDetails.name}'`)
     .then((result) => {
       // CONTINUE LOGIN VERIFICATION
       if (result.rows.length === 0) {
-        response.redirect("/login");
+        response.redirect('/login');
         return;
       } else {
         const user = result.rows[0];
         if (user.password === hashedPassword) {
-          const hashedCookie = setHash(user.id, "session");
-          response.cookie("session", hashedCookie);
-          response.cookie("userId", user.id);
-          response.redirect("/feed");
+          const hashedCookie = setHash(user.id, 'session');
+          response.cookie('session', hashedCookie);
+          response.cookie('userId', user.id);
+          response.redirect('/feed');
         } else {
-          response.redirect("/login");
+          console.log('wrong password');
+          response.redirect('/login');
           return;
         }
       }
@@ -326,29 +327,29 @@ app.post("/login", (request, response) => {
     .catch((error) => console.log(error));
 });
 
-app.get("/signup/1", (request, response) => {
-  response.render("signup1");
+app.get('/signup/1', (request, response) => {
+  response.render('signup1');
 });
 
-app.post("/signup/1", (request, response) => {
+app.post('/signup/1', (request, response) => {
   const newUserDataPartial = request.body;
   newUserDataPartial.password = setHash(
     newUserDataPartial.password,
-    "password"
+    'password'
   );
   console.log(newUserDataPartial);
-  response.render("signup2", newUserDataPartial);
+  response.render('signup2', newUserDataPartial);
 });
 
-app.post("/signup/2", (request, response) => {
+app.post('/signup/2', (request, response) => {
   const newUserDataPartial = request.body;
   console.log(newUserDataPartial);
-  response.render("signup3", newUserDataPartial);
+  response.render('signup3', newUserDataPartial);
 });
 
 app.post(
-  "/signup/3",
-  multerUpload.single("profilepic"),
+  '/signup/3',
+  multerUpload.single('profilepic'),
   (request, response) => {
     const newUserData = request.body;
     const inputNewUser = [
@@ -372,21 +373,21 @@ app.post(
       })
       .then((result) => {
         const newUserId = result.rows[0].id;
-        response.cookie("session", setHash(newUserId, "session"));
-        response.cookie("userId", newUserId);
-        response.redirect("/feed");
+        response.cookie('session', setHash(newUserId, 'session'));
+        response.cookie('userId', newUserId);
+        response.redirect('/feed');
       })
       .catch((error) => console.log(error));
   }
 );
 
-app.delete("/logout", (request, response) => {
-  response.clearCookie("userId");
-  response.clearCookie("session");
-  response.redirect("/login");
+app.delete('/logout', (request, response) => {
+  response.clearCookie('userId');
+  response.clearCookie('session');
+  response.redirect('/login');
 });
 
-app.post("/follow", (request, response) => {
+app.post('/follow', (request, response) => {
   const newRelationArr = [request.cookies.userId, request.body.followed];
   pool
     .query(
@@ -399,7 +400,7 @@ app.post("/follow", (request, response) => {
     .catch((error) => console.log(error));
 });
 
-app.delete("/unfollow", (request, response) => {
+app.delete('/unfollow', (request, response) => {
   const cutTiesArr = [request.cookies.userId, request.body.followed];
   pool
     .query(
@@ -412,13 +413,13 @@ app.delete("/unfollow", (request, response) => {
     .catch((error) => console.log(error));
 });
 
-app.get("/quote/:id/tip", (request, response) => {
+app.get('/quote/:id/tip', (request, response) => {
   const quoteId = request.params.id;
   const { userId } = request.cookies;
   const quoteInfo = {};
   // to do: add link to each quote
   const queryTmp = `SELECT quotes.quote, quotes.id as quote_id, quotes.created_at, dogs.name, dogs.id as user_id FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id WHERE quotes.id = ${quoteId}`;
-  console.log("query is: ", queryTmp);
+  console.log('query is: ', queryTmp);
   pool
     .query(queryTmp)
     .then((result) => {
@@ -428,8 +429,8 @@ app.get("/quote/:id/tip", (request, response) => {
       } else {
         quoteInfo.validity = true;
         quoteInfo.info = result.rows[0];
-        console.log("heree", result.rows);
-        console.log("#########################");
+        console.log('heree', result.rows);
+        console.log('#########################');
         quoteInfo.info.payer_id = userId;
         return pool.query(
           `SELECT * FROM transactions WHERE quote_id = ${quoteId}`
@@ -439,12 +440,12 @@ app.get("/quote/:id/tip", (request, response) => {
     .then((result) => {
       quoteInfo.transactions = result.rows;
       console.log(quoteInfo);
-      response.render("quote-single", quoteInfo);
+      response.render('quote-single', quoteInfo);
     })
     .catch((error) => console.log(error.stack));
 });
 
-app.post("/quote/:id/tip", (request, response) => {
+app.post('/quote/:id/tip', (request, response) => {
   const newTrxn = request.body;
   console.log(newTrxn);
   const inputData = [
@@ -474,10 +475,10 @@ app.post("/quote/:id/tip", (request, response) => {
     .catch((error) => console.log(error.stack));
 });
 
-app.get("/feed", checkAuth, (request, response) => {
+app.get('/feed', checkAuth, (request, response) => {
   const feed = {};
   const { userId } = request.cookies;
-  console.log("userlogin:", request.isUserLoggedIn);
+  console.log('userlogin:', request.isUserLoggedIn);
 
   let feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount 
   FROM quotes 
@@ -487,9 +488,9 @@ app.get("/feed", checkAuth, (request, response) => {
   FROM transactions GROUP BY quote_id) AS T1 
   ON quotes.id = T1.quote_id 
   ORDER BY quotes.created_at DESC`;
-  if (request.query.filter === "top") {
+  if (request.query.filter === 'top') {
     feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id ORDER BY amount DESC`;
-  } else if (request.query.filter === "following") {
+  } else if (request.query.filter === 'following') {
     feedQuoteQuery = `SELECT quotes.id, quotes.created_at, quotes.quote, quotes.quoter_id, dogs.name, T1.count, T1.sum AS amount FROM quotes INNER JOIN dogs ON quotes.quoter_id = dogs.id INNER JOIN (SELECT quote_id, COUNT(*), sum(amount) FROM transactions GROUP BY quote_id) AS T1 ON quotes.id = T1.quote_id WHERE quotes.quoter_id IN (SELECT followed_id FROM follows WHERE follower_id= ${userId}) ORDER BY quotes.created_at DESC`;
   }
 
@@ -510,24 +511,24 @@ app.get("/feed", checkAuth, (request, response) => {
     })
     .then((result) => {
       feed.dogs = result.rows;
-      response.render("feed", feed);
+      response.render('feed', feed);
     })
     .catch((error) => console.log(error.stack));
 });
 
-app.get("/topup", checkAuth, (request, response) => {
+app.get('/topup', checkAuth, (request, response) => {
   const { userId } = request.cookies;
   pool
     .query(`SELECT * FROM dogs WHERE id=${userId}`)
     .then((result) => {
       const info = result.rows[0];
       console.log(info);
-      response.render("payment", { info });
+      response.render('payment', { info });
     })
     .catch((error) => console.log(error));
 });
 
-app.post("/charge", (req, res) => {
+app.post('/charge', (req, res) => {
   req.body;
   console.log(req.body);
   try {
@@ -540,7 +541,7 @@ app.post("/charge", (req, res) => {
       .then((customer) =>
         stripe.charges.create({
           amount: req.body.amount * 100,
-          currency: "sgd",
+          currency: 'sgd',
           customer: customer.id,
         })
       )
@@ -552,36 +553,36 @@ app.post("/charge", (req, res) => {
           )}`
         );
       })
-      .then(() => res.render("payment_complete"))
-      .catch((err) => console.log("banana", err));
+      .then(() => res.render('payment_complete'))
+      .catch((err) => console.log('banana', err));
   } catch (err) {
     res.send(err);
   }
 });
 
-app.get("/test", (request, response) => {
+app.get('/test', (request, response) => {
   const testQuery = `UPDATE dogs SET password = '${setHash(
-    "nsMAC8cgG",
-    "password"
+    'nsMAC8cgG',
+    'password'
   )}' WHERE id=1`;
   pool
     .query(testQuery)
     .then((result) => {
       console.log(result.rows);
-      response.redirect("/login");
+      response.redirect('/login');
     })
     .catch((error) => {
       console.log(error);
     });
 });
 
-app.post("/feedsearch", (request, response) => {
+app.post('/feedsearch', (request, response) => {
   console.log(request.body.name);
   pool
     .query(`SELECT * FROM dogs WHERE name='${request.body.name}'`)
     .then((result) => {
       if (result.rows[0]) {
-        console.log("found");
+        console.log('found');
         const user = result.rows[0];
         response.redirect(`/dogs/profile/${user.id}`);
       } else {
@@ -593,5 +594,5 @@ app.post("/feedsearch", (request, response) => {
 });
 
 // Start server
-console.log("Starting server...");
+console.log('Starting server...');
 app.listen(PORT);
