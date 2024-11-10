@@ -47,7 +47,6 @@ Next, start the web application
 ```
 npm install
 npx nodemon index.js
-
 ```
 
 The application can be found on http://localhost:3004/.
@@ -55,10 +54,10 @@ Create an account and login.
 
 ## Test account
 
-Login without a test account:
+Login with a test account:
 
 1. Go to http://localhost:3004/test
-2. login with the following credentials:
+2. Use the following credentials:
 
 ```
 username: Yettie

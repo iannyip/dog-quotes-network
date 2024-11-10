@@ -39,7 +39,6 @@ if (process.env.DATABASE_URL) {
     host: 'localhost',
     database: 'doggos',
     port: process.env.PORT || 5432,
-    ssl: { rejectUnauthorized: false },
   };
 }
 
